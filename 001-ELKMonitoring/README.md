@@ -34,7 +34,7 @@ cd udemy-devops-9projects-free/001-ELKMonitoring
 
 # passwords are in the .env file
 
-sudo docker-compose up -d
+docker compose up -d
 ```
 
 ## 2. Add Elasticsearch CA certificates
@@ -44,10 +44,16 @@ As the communication between Elasticsearch and metricbeat is using tls, you need
 a. Copy the CA certificate from one of Elasticsearch containers
 
 ```
-docker exec -it <elasticsearch 01> openssl x509 -fingerprint -sha256 -in /usr/share/elasticsearch/config/certs/ca/ca.crt
+docker exec -it $(docker ps -aqf "name=001-elkmonitoring-es01-1") openssl x509 -fingerprint -sha256 -in /usr/share/elasticsearch/config/certs/ca/ca.crt
 ```
 
+The output will be used in the next step.
+
 b.  Go to the host which you want to monitor and run below command:
+
+e.g. 
+
+`docker exec -it $(docker ps -aqf "name=001-elkmonitoring-es01-1") bash`
 
 ```
 sudo apt-get install -y ca-certificates
@@ -60,6 +66,7 @@ sudo update-ca-certificates
 ## 3. Deploy metricbeat service
 
 Deploy a metricbeat service in the monitored server to collect the metric data.
+
 > Note: In this example, we are monitoring the local host. For other hosts, you just need to update the ELK host IP address in the `metricbeat.yaml` to make sure the metricbeat can reach the Elasticsearch.
 
 ```
@@ -88,13 +95,17 @@ sudo systemctl status metricbeat
 
 ## 4. Go to Kibana. In Dashboard, select "[Metricbeat System] Host overview ECS"
 
-a. Open your browser and go to [http://0.0.0.0:5601/](http://0.0.0.0:5601/) (if the metricbeat is installed in your local host). Enter the username(default is elastic)/passwors set in `.env`.
+a. Open your browser and go to [http://192.168.33.10:5601/](http://192.168.33.10:5601/) (if the metricbeat is installed in your local host). 
+
+Enter the username (default is elastic) / passwors set in `.env`.
 
 b. Click the menu icon in the top left and go to "Dashboard"
 
 c. Select "[Metricbeat System] Host overview ECS" and you should be able to see all metric data from your local host presented in the dashboard.
-![kibana](./images/1.jpg)
-![kibana](./images/2.jpg)
+
+![kibana1](./images/1.jpg)
+
+![kibana2](./images/2.jpg)
 
 # <a name="post_project">Post Project</a>
 
