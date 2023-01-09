@@ -27,11 +27,12 @@ Learn how to deploy a ELK with docker-compose, as well as configuring metricbeat
 Clone the github repo and run the docker compose to start up the ELK stack
 
 ```
-git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
-cd devopsdaydayup/001-ELKMonitoring
 sudo sysctl -w vm.max_map_count=262144
 
-# remember to update password in .env file
+git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
+cd udemy-devops-9projects-free/001-ELKMonitoring
+
+# passwords are in the .env file
 
 sudo docker-compose up -d
 ```
