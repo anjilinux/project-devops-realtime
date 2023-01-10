@@ -1,6 +1,6 @@
 # Project Name: ELK Monitoring
 
-Windows only
+Mac + Ubuntu (vagrant vbox)
 
 ## Steps
 

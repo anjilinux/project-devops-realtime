@@ -2,13 +2,13 @@
 
 Mac + Ubuntu (vagrant vbox)
 
-## <a name="project_steps">Project Steps</a>
+## Steps
 
-## 1. Deploy a ELK stack
+### 1. Deploy a ELK stack
 
 Clone the github repo and run the docker compose to start up the ELK stack
 
-```
+```bash
 sudo sysctl -w vm.max_map_count=262144
 
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
@@ -19,13 +19,13 @@ cd udemy-devops-9projects-free/001-ELKMonitoring
 docker compose up -d
 ```
 
-## 2. Add Elasticsearch CA certificates
+### 2. Add Elasticsearch CA certificates
 
 As the communication between Elasticsearch and metricbeat is using tls, you need to add the Elasticsearch CA into the server which is going to be monitored.
 
 a. Copy the CA certificate from one of Elasticsearch containers
 
-```
+```bash
 docker exec -it $(docker ps -aqf "name=001-elkmonitoring-es01-1") openssl x509 -fingerprint -sha256 -in /usr/share/elasticsearch/config/certs/ca/ca.crt
 ```
 
@@ -37,7 +37,7 @@ e.g.
 
 `docker exec -it $(docker ps -aqf "name=001-elkmonitoring-es01-1") bash`
 
-```
+```bash
 sudo apt-get install -y ca-certificates
 cd /usr/local/share/ca-certificates/
 sudo vi elasticsearch-ca.crt
@@ -45,13 +45,13 @@ sudo vi elasticsearch-ca.crt
 sudo update-ca-certificates
 ```
 
-## 3. Deploy metricbeat service
+### 3. Deploy metricbeat service
 
 Deploy a metricbeat service in the monitored server to collect the metric data.
 
 > Note: In this example, we are monitoring the local host. For other hosts, you just need to update the ELK host IP address in the `metricbeat.yaml` to make sure the metricbeat can reach the Elasticsearch.
 
-```
+```bash
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
 sudo apt update
@@ -75,7 +75,7 @@ sudo systemctl start metricbeat
 sudo systemctl status metricbeat
 ```
 
-## 4. Go to Kibana. In Dashboard, select "[Metricbeat System] Host overview ECS"
+### 4. Go to Kibana. In Dashboard, select "[Metricbeat System] Host overview ECS"
 
 a. Open your browser and go to [http://192.168.33.10:5601/](http://192.168.33.10:5601/) (if the metricbeat is installed in your local host).
 
@@ -88,14 +88,3 @@ c. Select "[Metricbeat System] Host overview ECS" and you should be able to see 
 ![kibana1](./images/1.jpg)
 
 ![kibana2](./images/2.jpg)
-
-# <a name="post_project">Post Project</a>
-
-Run below commands to remove docker containers and volumes
-
-```
-docker-compose down -v
-sudo systemctl stop metricbeat
-sudo systemctl disable metricbeat
-sudo apt remove metricbeat
-```

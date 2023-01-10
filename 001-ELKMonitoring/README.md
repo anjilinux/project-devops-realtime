@@ -12,7 +12,7 @@ Learn how to deploy a ELK with docker-compose, as well as configuring metricbeat
 - [Docker](https://docs.docker.com/engine/install/ubuntu/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-# Clean up
+## Clean up
 
 Run below commands to remove docker containers and volumes
 
@@ -35,8 +35,27 @@ sudo apt remove metricbeat
 
 ## Environments
 
-[With_Mac_Ubuntu](Mac_Ubuntu.md)
+| #  | Env  | Y/N  | Recommended   |  Comment |
+|---|---|---|---|---|
+| 1 | Windows only | N | N |   |
+| 2 | Windows + Ubuntu | ? | N |   |
+| 3 | Mac only | ? | N |   |
+| 4 | Mac + Ubuntu | ? | Y |   |
 
-[With_Windows_Ubuntu](Windows_Ubuntu.md)
+[Windows Only doesn't work](01_N_WindowsOnly.md)
 
-[With_WindowsOnly](WindowsOnly.md)
+[With_Windows_Ubuntu](02_Y_Windows_Ubuntu.md)
+
+[Mac Only doesn't work](03_N_MacOnly.md)
+
+[With_Mac_Ubuntu](04_Y_Mac_Ubuntu.md)
+
+Vagrant home:
+
+- Windows
+
+`c:\devbox`
+
+- Mac
+
+`~/devbox`
