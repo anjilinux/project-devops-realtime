@@ -26,7 +26,6 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 ```
 
-
 ## [Vagrant] Port 53 error
 
 - Issue
@@ -40,7 +39,6 @@ Same as above `[Vagrant] DNS issue`
 ## docker permission denied
 
 - Issue
-
 
 ```bash
 vagrant@vagrant:~/udemy-devops-9projects-free/001-ELKMonitoring$ docker compose up -d
