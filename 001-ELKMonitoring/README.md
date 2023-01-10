@@ -17,7 +17,7 @@ Learn how to deploy a ELK with docker-compose, as well as configuring metricbeat
 Run below commands to remove docker containers and volumes
 
 ```bash
-docker-compose down -v
+sudo docker compose down -v
 sudo systemctl stop metricbeat
 sudo systemctl disable metricbeat
 sudo apt remove metricbeat
@@ -38,9 +38,9 @@ sudo apt remove metricbeat
 | #  | Env  | Y/N  | Recommended   |  Comment |
 |---|---|---|---|---|
 | 1 | Windows only | N | N |   |
-| 2 | Windows + Ubuntu | ? | N |   |
-| 3 | Mac only | ? | N |   |
-| 4 | Mac + Ubuntu | ? | Y |   |
+| 2 | Windows + Ubuntu | Y | Y |   |
+| 3 | Mac only | N | N |   |
+| 4 | Mac + Ubuntu | Y | N |   |
 
 [Windows Only doesn't work](01_N_WindowsOnly.md)
 

@@ -283,12 +283,10 @@ Loading dashboards (Kibana must be running and reachable)
 
 a. Open your browser and go to [http://192.168.33.10:5601/](http://192.168.33.10:5601/) (if the metricbeat is installed in your local host).
 
-Enter the username (default is elastic) / passwors set in `.env`.
+Enter the username (default is elastic) / password set in `.env`.
 
 b. Click the menu icon in the top left and go to "Dashboard"
 
 c. Select "[Metricbeat System] Host overview ECS" and you should be able to see all metric data from your local host presented in the dashboard.
 
-![kibana1](./images/1.jpg)
-
-![kibana2](./images/2.jpg)
+![1673320776011](image/02_Y_Windows_Ubuntu/1673320776011.png)
