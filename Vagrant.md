@@ -43,6 +43,8 @@ end
 
 ### Vagrant destroy
 
+`vagrant destroy -f`
+
 ### Vagrant up
 
 `vagrant box list`
