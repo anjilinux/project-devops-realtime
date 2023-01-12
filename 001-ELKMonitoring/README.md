@@ -40,7 +40,7 @@ sudo apt remove metricbeat
 | 1 | Windows only | N | N |   |
 | 2 | Windows + Ubuntu | Y | Y |   |
 | 3 | Mac only | N | N |   |
-| 4 | Mac + Ubuntu | Y | N |   |
+| 4 | Mac + Ubuntu | Y | Y |   |
 
 [Windows Only doesn't work](01_N_WindowsOnly.md)
 

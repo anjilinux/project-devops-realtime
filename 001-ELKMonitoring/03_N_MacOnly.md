@@ -1,6 +1,6 @@
 # Project 001: ELK Monitoring
 
-Windows only
+Mac only
 
 Doesn't work
 
