@@ -59,3 +59,7 @@ Linux vagrant 5.4.0-42-generic #46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020 x86_6
 ### Vagrant init
 
 No need.
+
+### Vagrant password
+
+The default password is "Vagrant"
