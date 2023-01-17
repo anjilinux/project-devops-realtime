@@ -17,7 +17,7 @@ docker-compose up -d
 
 ### 2. Open your **browser** and go to the Jenkins UI website (<http://<JenkinsHostIP>>)
 
-If you install the Jenkins in your local host, you can go [here](http://127.0.0.1) or [here](http://0.0.0.0).
+If you install the Jenkins in your local host, you can go [http://127.0.0.1](http://127.0.0.1) or [http://0.0.0.0](http://0.0.0.0).
 
 Login to the Jenkins with the username/password defined in your `docker-compose.yaml`.
 
@@ -37,7 +37,7 @@ a. **"Definition"**: select "Pipeline script from SCM"
 
 b. **"SCM"**: select "Git"
 
-c. **"Repository URL"**: Enter the URL of the repo which has Jenkinsfile, for example, <https://github.com/briansu2004/devopsdaydayup>. (Note: You can fork "devopsdaydayup" repo to your github account and enter the URL accordingly)
+c. **"Repository URL"**: Enter the URL of the repo which has Jenkinsfile, for example, <https://github.com/briansu2004/udemy-devops-9projects-free>. (Note: You can fork "udemy-devops-9projects-free" repo to your github account and enter the URL accordingly)
 
 d. **"Credentials"**: If you don't have any credential, click "Add" -> "Jenkins", in "Kind" field select "Username with password". In "Scope" field select "Global(Jenkins, nodes, items, all child items, etc)". In "Username", type your github account username. In "Password", type your github account token.
 
@@ -80,8 +80,25 @@ docker exec <jenkins_container> chmod 777 /var/run/docker.sock
 
 ![1673989184001](image/01_YN_WindowsOnly/1673989184001.png)
 
-### 8. You should be able to see the hello world page in [here](http://localhost:8080)
+### 8. You should be able to see the hello world page in [http://localhost:8080](http://localhost:8080)
+
+![1673989764972](image/01_Y_WindowsOnly/1673989764972.png)
 
 ### 9. Make a change into `app.py`
 
-For example, change "Hello world" to "Hello Brian". And then click "Build" again to trigger the pipeline to deploy the change. Once it is done, you should be able to see your change in [here](http://localhost:8080)
+For example, change "Hello world" to "Hello DevOps".
+
+```python
+def hello():
+    return "Hello DevOps!"
+```
+
+```html
+  <h1>Hello, DevOps!</h1>
+```
+
+And then click "Build" again to trigger the pipeline to deploy the change.
+
+ Once it is done, you should be able to see your change in [http://localhost:8080](http://localhost:8080)
+
+![1673990786471](image/01_Y_WindowsOnly/1673990786471.png)
