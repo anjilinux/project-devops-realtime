@@ -229,9 +229,9 @@ Once you push the code, you should be able to see the pipeline is automatically 
 
 ## 9. Verification
 
-  a. Check your hello-world container by visiting the **website** http://<HOST IP which is running the docker-compose.yaml>:8080 <br/>
+  a. Check your hello-world container by visiting the **website** <http://<HOST> IP which is running the docker-compose.yaml>:8080 <br/>
   b. In your **gitlab repo**, update `return "Hello World!"` in `app.py` file. For example, update to `return "Hello World 2022!"`. Save the change and `git add .` and `git commit -am "Update code"` and then `git push`.<br/>
-  c. Once the CICD pipeline is completed, you can visit your hello-world web again to see if the content is changed. http://<HOST IP which is running the docker-compose.yaml>:8080 <br/>
+  c. Once the CICD pipeline is completed, you can visit your hello-world web again to see if the content is changed. <http://<HOST> IP which is running the docker-compose.yaml>:8080 <br/>
 
 # <a name="post_project">Post Project</a>
 
@@ -334,3 +334,30 @@ gitlab-runner verify --delete
 [Runner Cannot Register with error: x509: certificate relies on legacy Common Name field, use SANs instead](https://gitlab.com/gitlab-org/gitlab-runner/-/issues/28841)<br/>
 [Enable Container Registry](https://blog.programster.org/dockerized-gitlab-enable-container-registry)<br/>
 [List all Gitlab pipeline environment variables](https://docs.gitlab.com/ee/ci/variables/)<br/>
+
+## Vagrant home
+
+- Windows
+
+`c:\devbox`
+
+- Mac
+
+`~/devbox`
+
+## Environments
+
+| #  | Env  | Y/N  | Recommended   |  Comment |
+|---|---|---|---|---|
+| 1 | Windows only | N | N |   |
+| 2 | Windows + Ubuntu | Y | Y |   |
+| 3 | Mac only | N | N |   |
+| 4 | Mac + Ubuntu | Y | Y |   |
+
+[Windows Only](01_YN_WindowsOnly.md)
+
+[With_Windows_Ubuntu](02_YN_Windows_Ubuntu.md)
+
+[Mac Only](03_YN_MacOnly.md)
+
+[With_Mac_Ubuntu](04_YN_Mac_Ubuntu.md)

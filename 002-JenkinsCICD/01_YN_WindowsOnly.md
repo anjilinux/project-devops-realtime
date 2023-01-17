@@ -9,15 +9,23 @@ Windows only
 
 1. Deploy a Jenkins docker container with **docker-compose**
 
-```
-git clone https://github.com/devops2021/devopsdaydayup.git
-cd devopsdaydayup/002-JenkinsCICD
+```bash
+git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
+cd udemy-devops-9projects-free//002-JenkinsCICD
 docker-compose up -d
 ```
 
-2. Open your **browser** and go to the Jenkins UI website (<http://<JenkinsHostIP>>). If you install the Jenkins in your local host, you can go [here](http://0.0.0.0). Login to the Jenkins with the username/password defined in your `docker-compose.yaml`.
+2. Open your **browser** and go to the Jenkins UI website (<http://<JenkinsHostIP>>).
+
+If you install the Jenkins in your local host, you can go [here](http://127.0.0.1) or [here](http://0.0.0.0).
+
+Login to the Jenkins with the username/password defined in your `docker-compose.yaml`.
+
+![1673986322711](image/01_YN_WindowsOnly/1673986322711.png)
 
 3. Go to **"Manage Jenkins"** in the left lane and go to **"Manage Plugins"**. Click **"Available"** tab in the **"Plugin Manager"** page and type **"pipeline"** in the search bar. Select **"Pipeline"** and click **"Download now and install after restart"**.
+
+![1673986385653](image/01_YN_WindowsOnly/1673986385653.png)
 
 4. Follow the same step above and install **"git"** and **"Docker Pipeline"** as plugins.
 
