@@ -31,16 +31,23 @@ Login to the Jenkins with the username/password defined in your `docker-compose.
 
 5. Once the plugin is installed and the Jenkins is restarted, go to the main page of the Jenkins website and click **"New Item"** in the left. Type the name of your project (i.g. first-project) and select **"Pipeline"** and click **"OK"**. In the Configuration page, make sure below fields in **"Pipeline"** section are filled:
 
+![1673986856666](image/01_YN_WindowsOnly/1673986856666.png)
+
     a. **"Definition"**: select "Pipeline script from SCM"
 
     b. **"SCM"**: select "Git"
 
-    c. **"Repository URL"**: Enter the URL of the repo which has Jenkinsfile, for example, <https://github.com/devops2021/devopsdaydayup>. (Note: You can fork "devopsdaydayup" repo to your github account and enter the URL accordingly)
+    c. **"Repository URL"**: Enter the URL of the repo which has Jenkinsfile, for example, <https://github.com/briansu2004/devopsdaydayup>. (Note: You can fork "devopsdaydayup" repo to your github account and enter the URL accordingly)
 
     d. **"Credentials"**: If you don't have any credential, click "Add" -> "Jenkins", in "Kind" field select "Username with password". In "Scope" field select "Global(Jenkins, nodes, items, all child items, etc)". In "Username", type your github account username. In "Password", type your github account token.
 
     **Note**: In order to get a github token, you can go to your github account and select **"Setting"** once you click your account icon in the top right. Go to **"Developer settings"** in the very bottom left lane and go to **"Personal access tokens"** -> **"Tokens(classic)"**, and then click "Generate new token" to create a new token for above step, making sure the token has at lease `write:packages` and `read:packages` so that it can upload/download packages to GitHub Package Registry.
-![github-personal-token](images/github-personal-token.png)
+
+![1673987200881](image/01_YN_WindowsOnly/1673987200881.png)
+
+![1673987351678](image/01_YN_WindowsOnly/1673987351678.png)
+
+![1673987544147](image/01_YN_WindowsOnly/1673987544147.png)
 
     e. **"ID"**: Enter the name of this credential, which will be referred in the Pipeline later. For example, github-token.
 
@@ -50,28 +57,30 @@ Login to the Jenkins with the username/password defined in your `docker-compose.
 
     h. Unselect **"Lightweight checkout"**
 
-![JenkinsPipeline](images/jenkinspipeline.png)
+![1673987607480](image/01_YN_WindowsOnly/1673987607480.png)
 
 Save above change.
 
-6. Run a container **before** trigger your pipeline
+1. Run a container **before** trigger your pipeline
 
-```
+```bash
 docker build -t color-web:init .
 docker run -d -p 8080:8080 --name color-web color-web:init
 ```
 
-7. Click **"Build"** to trigger your first pipeline
+```bash
+docker ps -aqf "name=002-jenkinscicd-jenkins-1"
 
-> Note: If you encounter with any docker execute permission issue, you may need to run below command to apply a proper permission on `docker.sock`
-
-```
-docker exec <jenkinsContainerID> chmod 777 /var/run/docker.sock
+docker exec <jenkins_container> chmod 777 /var/run/docker.sock
 ```
 
-8. You should be able to see the hello world page in [here](http://localhost:8080)
+![1673987714192](image/01_YN_WindowsOnly/1673987714192.png)
 
-9. Make a change into `app.py`. For example, change "Hello world" to "Hello world 2". And then click "Build" again to trigger the pipeline to deploy the change. Once it is done, you should be able to see your change in [here](http://localhost:8080)
+1. Click **"Build"** to trigger your first pipeline
+
+2. You should be able to see the hello world page in [here](http://localhost:8080)
+
+3. Make a change into `app.py`. For example, change "Hello world" to "Hello world 2". And then click "Build" again to trigger the pipeline to deploy the change. Once it is done, you should be able to see your change in [here](http://localhost:8080)
 
 ## Troubleshooting
 
@@ -79,7 +88,7 @@ docker exec <jenkinsContainerID> chmod 777 /var/run/docker.sock
 
 When you run the pipeline, it fails with below error:
 
-```
+```bash
 groovy.lang.MissingPropertyException: No such property: docker for class: groovy.lang.Binding
  at groovy.lang.Binding.getVariable(Binding.java:63)
  at org.jenkinsci.plugins.scriptsecurity.sandbox.groovy.SandboxInterceptor.onGetProperty(SandboxInterceptor.java:251)
@@ -133,7 +142,7 @@ Make sure "Docker-Pipeline" plugin is installed
 
 When running the pipeline, below error is showed
 
-```
+```bash
 + docker stop color-web
 Error response from daemon: No such container: color-web
 [Pipeline] }
@@ -157,7 +166,7 @@ Finished: FAILURE
 **Solution:**
 Make sure the `color-web` container is running
 
-```
+```bash
 docker run -p 8080:8080 --name color-web color-web:init
 ```
 
@@ -166,7 +175,7 @@ docker run -p 8080:8080 --name color-web color-web:init
 **Solution:**
 Run below command to grant access to `docker.sock` for the Jenkins pipeline job container
 
-```
+```bash
 docker exec <jenkinsContainerID> chmod 777 /var/run/docker.sock
 ```
 
@@ -174,7 +183,7 @@ docker exec <jenkinsContainerID> chmod 777 /var/run/docker.sock
 
 When running Jenkins pipeline to build docker image, it shows below error
 
-```
+```bash
 Jenkins error buildind : docker: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.32' not found (required by docker)
 ```
 
@@ -186,7 +195,7 @@ You can build a customed image with seperated docker component/lib installed and
 
 Dockerfile
 
-```
+```bash
 FROM jenkins/jenkins:lts-jdk17
 USER root
 RUN apt-get update \
@@ -198,7 +207,7 @@ USER jenkins
 
 docker-compose.yaml
 
-```
+```yml
 version: '3.8'
 services:
   jenkins-container:
@@ -215,7 +224,7 @@ When creating the docker-compose, above error showing
 **Solution:**
 Restart your docker engine and try to create again
 
-```
+```bash
 sudo systemctl restart docker
 ```
 

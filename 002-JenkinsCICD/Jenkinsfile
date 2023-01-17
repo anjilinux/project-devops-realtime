@@ -2,7 +2,7 @@ pipeline {
     agent any 
     environment{
         registryUrlBase = "https://ghcr.io"
-        registryUrl = "ghcr.io/devops2021/devopsdaydayup"
+        registryUrl = "ghcr.io/briansu2004/devopsdaydayup"
         registryCredentialsId = 'github-token'
         commitID = sh(script: 'git rev-parse --short HEAD', returnStdout:true).trim()
         containerName = "color-web"
@@ -15,7 +15,7 @@ pipeline {
                 script {
                     docker.withRegistry(registryUrlBase, registryCredentialsId) {
                         dockerImage = docker.build("$registryUrl:$commitID","./002-JenkinsCICD")
-			dockerImage.push()
+			            dockerImage.push()
                     }
                 }
             }
