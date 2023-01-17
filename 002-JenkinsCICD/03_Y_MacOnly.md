@@ -21,17 +21,17 @@ If you install the Jenkins in your local host, you can go [http://127.0.0.1](htt
 
 Login to the Jenkins with the username/password defined in your `docker-compose.yaml`.
 
-![1673986322711](image/01_YN_WindowsOnly/1673986322711.png)
+![1673986322711](image/01_Y_WindowsOnly/1673986322711.png)
 
 ### 3. Go to **"Manage Jenkins"** in the left lane and go to **"Manage Plugins"**. Click **"Available"** tab in the **"Plugin Manager"** page and type **"pipeline"** in the search bar. Select **"Pipeline"** and click **"Download now and install after restart"**
 
-![1673986385653](image/01_YN_WindowsOnly/1673986385653.png)
+![1673986385653](image/01_Y_WindowsOnly/1673986385653.png)
 
 ### 4. Follow the same step above and install **"git"** and **"Docker Pipeline"** as plugins
 
 ### 5. Once the plugin is installed and the Jenkins is restarted, go to the main page of the Jenkins website and click **"New Item"** in the left. Type the name of your project (i.g. first-project) and select **"Pipeline"** and click **"OK"**. In the Configuration page, make sure below fields in **"Pipeline"** section are filled
 
-![1673986856666](image/01_YN_WindowsOnly/1673986856666.png)
+![1673986856666](image/01_Y_WindowsOnly/1673986856666.png)
 
 a. **"Definition"**: select "Pipeline script from SCM"
 
@@ -43,11 +43,11 @@ d. **"Credentials"**: If you don't have any credential, click "Add" -> "Jenkins"
 
 **Note**: In order to get a github token, you can go to your github account and select **"Setting"** once you click your account icon in the top right. Go to **"Developer settings"** in the very bottom left lane and go to **"Personal access tokens"** -> **"Tokens(classic)"**, and then click "Generate new token" to create a new token for above step, making sure the token has at lease `write:packages` and `read:packages` so that it can upload/download packages to GitHub Package Registry.
 
-![1673987200881](image/01_YN_WindowsOnly/1673987200881.png)
+![1673987200881](image/01_Y_WindowsOnly/1673987200881.png)
 
-![1673987351678](image/01_YN_WindowsOnly/1673987351678.png)
+![1673987351678](image/01_Y_WindowsOnly/1673987351678.png)
 
-![1673987544147](image/01_YN_WindowsOnly/1673987544147.png)
+![1673987544147](image/01_Y_WindowsOnly/1673987544147.png)
 
 e. **"ID"**: Enter the name of this credential, which will be referred in the Pipeline later. For example, github-token.
 
@@ -57,7 +57,7 @@ g. **"Script Path"**: Enter the relative path for the Jenkinsfile in your repo, 
 
 h. Unselect **"Lightweight checkout"**
 
-![1673987607480](image/01_YN_WindowsOnly/1673987607480.png)
+![1673987607480](image/01_Y_WindowsOnly/1673987607480.png)
 
 Save above change.
 
@@ -74,11 +74,11 @@ docker ps -aqf "name=002-jenkinscicd-jenkins-1"
 docker exec <jenkins_container> chmod 777 /var/run/docker.sock
 ```
 
-![1673987714192](image/01_YN_WindowsOnly/1673987714192.png)
+![1673987714192](image/01_Y_WindowsOnly/1673987714192.png)
 
 ### 7. Click **"Build"** to trigger your first pipeline
 
-![1673989184001](image/01_YN_WindowsOnly/1673989184001.png)
+![1673989184001](image/01_Y_WindowsOnly/1673989184001.png)
 
 ### 8. You should be able to see the hello world page in [http://localhost:8080](http://localhost:8080)
 
