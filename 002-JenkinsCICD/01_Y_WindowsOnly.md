@@ -93,9 +93,7 @@ def hello():
     return "Hello DevOps!"
 ```
 
-```html
-  <h1>Hello, DevOps!</h1>
-```
+Then git push to the repo.
 
 And then click "Build" again to trigger the pipeline to deploy the change.
 
