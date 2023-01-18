@@ -11,7 +11,7 @@ Works
 
 ```bash
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
-cd udemy-devops-9projects-free//002-JenkinsCICD
+cd udemy-devops-9projects-free/002-JenkinsCICD
 docker-compose up -d
 ```
 

@@ -9,19 +9,24 @@ Works?
 ## 1. Run the docker containers with **docker-compose**
 
 ```bash
-git clone https://github.com/devops2021/devopsdaydayup.git
-cd devopsdaydayup/003-GitlabCICD
+git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
+cd udemy-devops-9projects-free/003-GitlabCICD
 docker-compose up -d
 ```
 
-## 2. Add below entry in your **hosts** file (i.g. `/etc/hosts`)
+## 2. Add below entry in your **hosts** file 
 
-Once it is done, open your **browser** and go to <<https://<your_gitlab_domain_name>>>  (i.g. <https://gitlab.devops20221020.com/>)
+Windows: `C:\Windows\System32\drivers\etc\hosts`
+
+Unix / Mac: `/etc/hosts`
+
+Once it is done, open your **browser** and go to <<https://<your_gitlab_domain_name>>>  (i.g. <https://gitlab.mydevopsrealprojects.com/>)
 
 ```bash
 <GITLAB SERVER IP>  <YOUR DOMAIN NAME in docker-compose.yaml> 
 # For example
-# 192.168.2.61 gitlab.devops20221020.com registry.gitlab.devops20221020.com
+# 192.168.2.61 gitlab.mydevopsrealprojects.com registry.gitlab.mydevopsrealprojects.com
+# 127.0.0.1 gitlab.mydevopsrealprojects.com registry.gitlab.mydevopsrealprojects.com
 ```
 
 NOTE: if you are trying to use `localhost` as domain name, you have to use following command to get the ip mapping of the host. see detail in [post](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach):
