@@ -3,11 +3,11 @@ services:
   web:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
-    hostname: 'gitlab.sutek.com'
+    hostname: 'gitlab.mydevopsrealprojects.com'
     environment:
-      GITLAB_ROOT_PASSWORD: "changeme"
+      # GITLAB_ROOT_PASSWORD: "changeme"
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'https://gitlab.sutek.com'
+        external_url 'https://gitlab.mydevopsrealprojects.com'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
       - '80:80'
@@ -21,6 +21,7 @@ services:
     shm_size: '256m'
   hello-world:
     # image: ghcr.io/devops2021/devopsdaydayup:colorweb
+    # image: ghcr.io/briansu2004/devopsdaydayup:colorweb
     image: ghcr.io/briansu2004/udemy-devops-9projects-free:colorweb
     ports:
     - 8080:8080
