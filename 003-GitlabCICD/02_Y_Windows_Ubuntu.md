@@ -1,8 +1,8 @@
 # Project 003: Gitlab CICD Pipeline
 
-Windows only
+Windows + Ubuntu
 
-Works?
+Works!
 
 ## Steps
 
@@ -20,7 +20,7 @@ Windows: `C:\Windows\System32\drivers\etc\hosts`
 
 Unix / Mac: `/etc/hosts`
 
-Once it is done, open your **browser** and go to <<https://<your_gitlab_domain_name>>> 
+Once it is done, open your **browser** and go to <<https://<your_gitlab_domain_name>>>
 
 (e.g. <https://gitlab.mydevopsrealprojects.com/>)
 
@@ -71,9 +71,9 @@ cd /etc/gitlab/ssl
 openssl genrsa -out ca.key 2048
 openssl req -new -x509 -days 365 -key ca.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=Acme Root CA" -out ca.crt
 
-# Note: Make sure to replace below `YOUR_GITLAB_DOMAIN` with your own domain name. For example, devops20221020.com.
+# Note: Make sure to replace below `YOUR_GITLAB_DOMAIN` with your own domain name. For example, mydevopsrealprojects.com.
 
-export YOUR_GITLAB_DOMAIN=devops20221020.com
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 openssl req -newkey rsa:2048 -nodes -keyout gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out gitlab.$YOUR_GITLAB_DOMAIN.csr
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out gitlab.$YOUR_GITLAB_DOMAIN.crt
 
@@ -92,8 +92,8 @@ Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
 
 ```bash
 docker exec -it $(docker ps -f name=web -q) bash
-# Note: Make sure to replace below `YOUR_GITLAB_DOMAIN` with your own domain name. For example, devops20221020.com
-export YOUR_GITLAB_DOMAIN=devops20221020.com
+# Note: Make sure to replace below `YOUR_GITLAB_DOMAIN` with your own domain name. For example, mydevopsrealprojects.com
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 cat >> /etc/gitlab/gitlab.rb <<EOF
 
  registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5005'
@@ -130,7 +130,7 @@ In order to make **docker login** work, you need to add the **certificate** in d
 
 ```bash
 # Login the host you are going to run the docker commands
-export YOUR_GITLAB_DOMAIN=devops20221020.com
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
 sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
 sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
@@ -146,7 +146,7 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 
 # You can also test if the docker image push works once login successfully
-# Login to your gitlab server web UI and go to the project you created, and then go to "Packages and registries" -> "Container Registry", you should be able to see the valid registry URL you suppose to use in order to build and push your image. For example, `docker build -t registry.gitlab.devops20221020.com:5005/gitlab-instance-d350f73c/first-projct .` (See below screenshot)
+# Login to your gitlab server web UI and go to the project you created, and then go to "Packages and registries" -> "Container Registry", you should be able to see the valid registry URL you suppose to use in order to build and push your image. For example, `docker build -t registry.gitlab.mydevopsrealprojects.com:5005/gitlab-instance-d350f73c/first-projct .` (See below screenshot)
 ```
 
 ![container-registry](images/container-registry.png)
@@ -156,7 +156,7 @@ Login Succeeded
 Login to gitlab-runner and run commands below. Please note the tag below has to match with the `tags` section in `.gitlab-ci.yml` file:
 
 ```bash
-export YOUR_GITLAB_DOMAIN=devops20221020.com
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/gitlab.$YOUR_GITLAB_DOMAIN.crt
 docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
 docker exec -it $(docker ps -f name=gitlab-runner -q) bash
@@ -170,7 +170,7 @@ EOF
 
 update-ca-certificates
 gitlab-runner register 
-# Enter the GitLab instance URL (for example, https://<YOUR_GITLAB_DOMAIN>(i.g. https://gitlab.devops20221020.com)
+# Enter the GitLab instance URL (for example, https://<YOUR_GITLAB_DOMAIN>(i.g. https://gitlab.mydevopsrealprojects.com)
 
 Enter the registration token:
 <Paste the token retrieved in Step 3>

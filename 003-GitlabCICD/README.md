@@ -19,7 +19,7 @@ Understand how to setup/configure Gitlab as CICD pipeline. Familarize with gitla
 Error out when starting up or reconfigure the gitlab server
 
 ```
-RuntimeError: letsencrypt_certificate[gitlab.devops20221020.com] (letsencrypt::http_authorization line 6) had an error: RuntimeError: acme_certificate[staging] (letsencrypt::http_authorization line 43) had an error: RuntimeError: ruby_block[create certificate for gitlab.devops20221020.com] (letsencrypt::http_authorization line 110) had an error: RuntimeError: [gitlab.devops20221020.com] Validation failed, unable to request certificate, Errors: [{url: https://acme-staging-v02.api.letsencrypt.org/acme/chall-v3/4042412034/SuXaFQ, status: invalid, error: {"type"=>"urn:ietf:params:acme:error:dns", "detail"=>"DNS problem: NXDOMAIN looking up A for gitlab.devops20221020.com - check that a DNS record exists for this domain; DNS problem: NXDOMAIN looking up AAAA for gitlab.devops20221020.com - check that a DNS record exists for this domain", "status"=>400}} ]
+RuntimeError: letsencrypt_certificate[gitlab.mydevopsrealprojects.com] (letsencrypt::http_authorization line 6) had an error: RuntimeError: acme_certificate[staging] (letsencrypt::http_authorization line 43) had an error: RuntimeError: ruby_block[create certificate for gitlab.mydevopsrealprojects.com] (letsencrypt::http_authorization line 110) had an error: RuntimeError: [gitlab.mydevopsrealprojects.com] Validation failed, unable to request certificate, Errors: [{url: https://acme-staging-v02.api.letsencrypt.org/acme/chall-v3/4042412034/SuXaFQ, status: invalid, error: {"type"=>"urn:ietf:params:acme:error:dns", "detail"=>"DNS problem: NXDOMAIN looking up A for gitlab.mydevopsrealprojects.com - check that a DNS record exists for this domain; DNS problem: NXDOMAIN looking up AAAA for gitlab.mydevopsrealprojects.com - check that a DNS record exists for this domain", "status"=>400}} ]
 ```
 
 **Solution:**
@@ -30,7 +30,7 @@ Sometimes it will occur when letsencrypt is requesting for a old/used DNS record
 When running `gitlab-register`, it shows below error:
 
 ```
-ERROR: Registering runner... failed                 runner=GR1348941oqts-yxX status=couldn't execute POST against https://gitlab.devops20221020.com/api/v4/runners: Post "https://gitlab.devops20221020.com/api/v4/runners": dial tcp 0.0.0.0:443: connect: connection refused
+ERROR: Registering runner... failed                 runner=GR1348941oqts-yxX status=couldn't execute POST against https://gitlab.mydevopsrealprojects.com/api/v4/runners: Post "https://gitlab.mydevopsrealprojects.com/api/v4/runners": dial tcp 0.0.0.0:443: connect: connection refused
 ```
 
 **Solution:**
@@ -41,10 +41,10 @@ Make sure to follow step 4 to regerate a new certificate with proper info and up
 Cannot `docker login` to the gitlab container registry. Below error is returned
 
 ```
-$ docker login registry.gitlab.devops20221020.com:5005
+$ docker login registry.gitlab.mydevopsrealprojects.com:5005
 Username: root
 Password: 
-Error response from daemon: Get "https://registry.gitlab.devops20221020.com:5005/v2/": x509: certificate signed by unknown authority
+Error response from daemon: Get "https://registry.gitlab.mydevopsrealprojects.com:5005/v2/": x509: certificate signed by unknown authority
 ```
 
 **Cause:**
@@ -54,7 +54,7 @@ You are using a self-signed certificate for your gitlab container registry inste
 You must instruct docker to trust the self-signed certificate by copying the self-signed certificate to `/etc/docker/certs.d/<your_registry_host_name>:<your_registry_host_port>/ca.crt` on the machine where running the docker login command.
 
 ```
-export YOUR_GITLAB_DOMAIN=devops20221020.com
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 export YOUR_GITLAB_CONTAINER=<Gitlab Container ID>
 
 sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
@@ -66,7 +66,7 @@ sudo docker cp $YOUR_GITLAB_CONTAINER:/etc/gitlab/ssl/ca.crt /etc/docker/certs.d
 when running `gitlab-runner registry`, failing with below error
 
 ```
-ERROR: Registering runner... failed                 runner=GR1348941oqts-yxX status=couldn't execute POST against https://gitlab.devops20221020.com/api/v4/runners: Post "https://gitlab.devops20221020.com/api/v4/runners": x509: certificate signed by unknown authority
+ERROR: Registering runner... failed                 runner=GR1348941oqts-yxX status=couldn't execute POST against https://gitlab.mydevopsrealprojects.com/api/v4/runners: Post "https://gitlab.mydevopsrealprojects.com/api/v4/runners": x509: certificate signed by unknown authority
 ```
 
 > Refer to:
@@ -124,9 +124,9 @@ gitlab-runner verify --delete
 | 3 | Mac only | N | N |   |
 | 4 | Mac + Ubuntu | Y | Y |   |
 
-[Windows Only](01_YN_WindowsOnly.md)
+[Windows Only](01_N_WindowsOnly.md)
 
-[With_Windows_Ubuntu](02_YN_Windows_Ubuntu.md)
+[With_Windows_Ubuntu](02_Y_Windows_Ubuntu.md)
 
 [Mac Only](03_YN_MacOnly.md)
 
