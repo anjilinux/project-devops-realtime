@@ -14,28 +14,22 @@ cd udemy-devops-9projects-free/003-GitlabCICD
 docker-compose up -d
 ```
 
-```bash
-docker build -t color-web:init .
-docker run -d -p 8080:8080 --name color-web color-web:init
-
-ghcr.io/briansu2004/udemy-devops-9projects-free:colorweb
-```
-
-
-
 ## 2. Add below entry in your **hosts** file
 
 Windows: `C:\Windows\System32\drivers\etc\hosts`
 
 Unix / Mac: `/etc/hosts`
 
-Once it is done, open your **browser** and go to <<https://<your_gitlab_domain_name>>>  (i.g. <https://gitlab.mydevopsrealprojects.com/>)
+Once it is done, open your **browser** and go to <<https://<your_gitlab_domain_name>>> 
+
+(e.g. <https://gitlab.mydevopsrealprojects.com/>)
 
 ```bash
 <GITLAB SERVER IP>  <YOUR DOMAIN NAME in docker-compose.yaml> 
 # For example
 # 192.168.2.61 gitlab.mydevopsrealprojects.com registry.gitlab.mydevopsrealprojects.com
-# 127.0.0.1 gitlab.mydevopsrealprojects.com registry.gitlab.mydevopsrealprojects.com
+# 127.0.0.1 gitlab.mydevopsrealprojects.com 
+# 127.0.0.1 registry.gitlab.mydevopsrealprojects.com
 ```
 
 NOTE: if you are trying to use `localhost` as domain name, you have to use following command to get the ip mapping of the host. see detail in [post](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach):
