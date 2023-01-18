@@ -49,4 +49,34 @@ permission denied while trying to connect to the Docker daemon socket at unix://
 
 `sudo chmod 666 /var/run/docker.sock`
 
-## ?
+## Useful tools and commands
+
+`netstat -ano | findstr :50080`
+
+`netsh interface ipv4 show excludedportrange protocol=tcp`
+
+e.g.
+
+```dos
+C:\>netsh interface ipv4 show excludedportrange protocol=tcp 
+
+Protocol tcp Port Exclusion Ranges
+
+Start Port    End Port
+----------    --------
+      1045        1144
+      1145        1244
+      4523        4622
+      4823        4922
+      4923        5022
+      7098        7197
+      7198        7297
+     14365       14464
+     14765       14864
+     14865       14964
+     16826       16925
+     16993       17092
+     50000       50059     *
+
+* - Administered port exclusions.
+```

@@ -11,7 +11,7 @@ Works!
 Docker login with the GitHub token
 
 ```bash
-docker login ghcr.io -u briansu2004 --password-stdin
+docker login ghcr.io -u briansu2004
 ```
 
 Docker compose
