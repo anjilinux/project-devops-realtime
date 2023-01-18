@@ -70,6 +70,12 @@ Then login to the **Gitlab website (<<https://<YOUR_GITLAB_SERVER_IP>>>)** with 
 
 [https://127.0.0.1](https://127.0.0.1/users/sign_in)
 
+```dos
+
+/etc/gitlab/initial_root_password
+```
+
+
 Click **"New project"** to create your first project -> Click **"Create blank project"** -> Type your project name in **"Project Name"** -> Select **"Public"** and click **"Create project"** -> Go to the new project you just created, and go to **"Setting"** -> **"CI/CD"** -> expand **"Runners"** section. **Make a note** of **"URL** and **registration token** in **"Specific runners"** section for below runner installation used
 
 ## 4. Update certificates

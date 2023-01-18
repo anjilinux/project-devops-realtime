@@ -18,7 +18,7 @@ Understand how to setup/configure Gitlab as CICD pipeline. Familarize with gitla
 
 Error out when starting up or reconfigure the gitlab server
 
-```
+```dos
 RuntimeError: letsencrypt_certificate[gitlab.mydevopsrealprojects.com] (letsencrypt::http_authorization line 6) had an error: RuntimeError: acme_certificate[staging] (letsencrypt::http_authorization line 43) had an error: RuntimeError: ruby_block[create certificate for gitlab.mydevopsrealprojects.com] (letsencrypt::http_authorization line 110) had an error: RuntimeError: [gitlab.mydevopsrealprojects.com] Validation failed, unable to request certificate, Errors: [{url: https://acme-staging-v02.api.letsencrypt.org/acme/chall-v3/4042412034/SuXaFQ, status: invalid, error: {"type"=>"urn:ietf:params:acme:error:dns", "detail"=>"DNS problem: NXDOMAIN looking up A for gitlab.mydevopsrealprojects.com - check that a DNS record exists for this domain; DNS problem: NXDOMAIN looking up AAAA for gitlab.mydevopsrealprojects.com - check that a DNS record exists for this domain", "status"=>400}} ]
 ```
 
@@ -29,7 +29,7 @@ Sometimes it will occur when letsencrypt is requesting for a old/used DNS record
 
 When running `gitlab-register`, it shows below error:
 
-```
+```dos
 ERROR: Registering runner... failed                 runner=GR1348941oqts-yxX status=couldn't execute POST against https://gitlab.mydevopsrealprojects.com/api/v4/runners: Post "https://gitlab.mydevopsrealprojects.com/api/v4/runners": dial tcp 0.0.0.0:443: connect: connection refused
 ```
 
@@ -40,7 +40,7 @@ Make sure to follow step 4 to regerate a new certificate with proper info and up
 
 Cannot `docker login` to the gitlab container registry. Below error is returned
 
-```
+```dos
 $ docker login registry.gitlab.mydevopsrealprojects.com:5005
 Username: root
 Password: 
@@ -53,7 +53,7 @@ You are using a self-signed certificate for your gitlab container registry inste
 **Solution:**
 You must instruct docker to trust the self-signed certificate by copying the self-signed certificate to `/etc/docker/certs.d/<your_registry_host_name>:<your_registry_host_port>/ca.crt` on the machine where running the docker login command.
 
-```
+```dos
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 export YOUR_GITLAB_CONTAINER=<Gitlab Container ID>
 
@@ -65,7 +65,7 @@ sudo docker cp $YOUR_GITLAB_CONTAINER:/etc/gitlab/ssl/ca.crt /etc/docker/certs.d
 
 when running `gitlab-runner registry`, failing with below error
 
-```
+```dos
 ERROR: Registering runner... failed                 runner=GR1348941oqts-yxX status=couldn't execute POST against https://gitlab.mydevopsrealprojects.com/api/v4/runners: Post "https://gitlab.mydevopsrealprojects.com/api/v4/runners": x509: certificate signed by unknown authority
 ```
 
@@ -77,7 +77,7 @@ ERROR: Registering runner... failed                 runner=GR1348941oqts-yxX sta
 
 When running the gitlab pipeline, the job gets stuck with below error
 
-```
+```dos
 This job is stuck because the project doesn't have any runners online assigned to it
 ```
 
@@ -98,7 +98,7 @@ sometimes you might see the waring icon at the left side of runner. It is due to
 
 **Solution:**
 
-```
+```dos
 docker exec -it $(docker ps -f name=gitlab-runner -q) bash
 gitlab-runner verify --delete
 ```
