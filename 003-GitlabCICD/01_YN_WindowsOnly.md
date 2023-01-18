@@ -14,7 +14,16 @@ cd udemy-devops-9projects-free/003-GitlabCICD
 docker-compose up -d
 ```
 
-## 2. Add below entry in your **hosts** file 
+```bash
+docker build -t color-web:init .
+docker run -d -p 8080:8080 --name color-web color-web:init
+
+ghcr.io/briansu2004/udemy-devops-9projects-free:colorweb
+```
+
+
+
+## 2. Add below entry in your **hosts** file
 
 Windows: `C:\Windows\System32\drivers\etc\hosts`
 
