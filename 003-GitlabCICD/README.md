@@ -186,3 +186,23 @@ C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker compose up -d
  - Container 003-gitlabcicd-hello-world-1    Started                                                                                                                              12.4s 
  - Container 003-gitlabcicd-web-1            Started                                                                                                                              12.4s 
 ```
+
+### [GitLab] Set the initial root password
+
+```yml
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'gitlab.mydevopsrealprojects.com'
+    environment:
+      GITLAB_ROOT_PASSWORD: "Password2023#"
+      EXTERNAL_URL: "http://gitlab.mydevopsrealprojects.com"
+      GITLAB_OMNIBUS_CONFIG: |
+        gitlab_rails['initial_root_password'] = "Password2023#"
+        gitlab_rails['store_initial_root_password'] = true
+        gitlab_rails['display_initial_root_password'] = true
+    ports:
+```
+
+### [GitLab] 422
+
+Clear the cookie and cache, then restart Chrome!

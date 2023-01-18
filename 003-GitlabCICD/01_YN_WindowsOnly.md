@@ -71,10 +71,101 @@ Then login to the **Gitlab website (<<https://<YOUR_GITLAB_SERVER_IP>>>)** with 
 [https://127.0.0.1](https://127.0.0.1/users/sign_in)
 
 ```dos
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -a
+CONTAINER ID   IMAGE                                 COMMAND                  CREATED          STATUS                             PORTS                                                                                    NAMES  
+9f049a205ad7   gitlab/gitlab-ce:latest               "/assets/wrapper"        16 seconds ago   Up 15 seconds (health: starting)   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:8822->22/tcp, 0.0.0.0:5055->5005/tcp   003-gitlabcicd-web-1
+bf6624516357   ghcr.io/briansu2004/colorweb:latest   "python app.py"          16 seconds ago   Up 15 seconds                      0.0.0.0:8080->8080/tcp                                                                   003-gitlabcicd-hello-world-1
+083dcb12441c   gitlab/gitlab-runner:latest           "/usr/bin/dumb-init …"   16 seconds ago   Up 15 seconds                                                                                                               003-gitlabcicd-gitlab-runner-1
 
-/etc/gitlab/initial_root_password
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker exec -it 003-gitlabcicd-web-1 ls -la /etc/gitlab/ 
+total 196
+drwxrwxr-x 3 root root   4096 Jan 18 21:54 .
+drwxr-xr-x 1 root root   4096 Jan 18 21:53 ..
+-rw------- 1 root root  19345 Jan 18 21:55 gitlab-secrets.json
+-rw------- 1 root root 139976 Jan 18 21:53 gitlab.rb
+-rw------- 1 root root    537 Jan 18 21:53 ssh_host_ecdsa_key
+-rw-r--r-- 1 root root    198 Jan 18 21:53 ssh_host_ecdsa_key.pub
+-rw------- 1 root root    432 Jan 18 21:53 ssh_host_ed25519_key
+-rw-r--r-- 1 root root    118 Jan 18 21:53 ssh_host_ed25519_key.pub
+-rw------- 1 root root   2635 Jan 18 21:53 ssh_host_rsa_key
+-rw-r--r-- 1 root root    590 Jan 18 21:53 ssh_host_rsa_key.pub
+drwxr-xr-x 2 root root   4096 Jan 18 21:54 trusted-certs
+
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker exec -it 003-gitlabcicd-web-1 bash                                             
+root@gitlab:/# cat /etc/gitlab/gitlab-secrets.json | grep pass
+    "admin_password": "c8db17a025a5bef188e501f62a5391f1",
+    "metrics_basic_auth_password": null,
+
+root@gitlab:/etc/gitlab# cat gitlab.rb | grep root
+# gitlab_rails['initial_root_password'] = "password"
+#### Toggle if root password should be printed to STDOUT during initialization
+# gitlab_rails['display_initial_root_password'] = false
+#### Toggle if initial root password should be written to /etc/gitlab/initial_root_password
+# gitlab_rails['store_initial_root_password'] = true
+# gitlab_rails['db_sslrootcert'] = nil
+# registry['rootcertbundle'] = "/var/opt/gitlab/registry/certificate.crt"
+# gitlab_workhorse['alt_document_root'] = nil
+##! Most root CA's are included by default
+# gitaly['cgroups_hierarchy_root'] = 'gitaly'
+# praefect['database_sslrootcert'] = '/path/to/rootcert'
+# praefect['database_direct_sslrootcert'] = '/path/to/rootcert'
+# letsencrypt['group'] = 'root'
+# letsencrypt['owner'] = 'root'
+# letsencrypt['wwwroot'] = '/var/opt/gitlab/nginx/www'
+# geo_secondary['db_sslrootcert'] = nil
+
+root@gitlab:/etc/gitlab# vi gitlab.rb
+
+# gitlab_rails['initial_root_password'] = "password"
+->
+gitlab_rails['initial_root_password'] = "password"
+
+# gitlab_rails['display_initial_root_password'] = false
+->
+gitlab_rails['display_initial_root_password'] = true
+
+# gitlab_rails['store_initial_root_password'] = true
+->
+gitlab_rails['store_initial_root_password'] = true
+
+root@gitlab:/etc/gitlab# gitlab-ctl reconfigure
+...
+Running handlers complete
+[2023-01-18T22:20:11+00:00] INFO: Report handlers complete
+Infra Phase complete, 0/734 resources updated in 12 seconds
+gitlab Reconfigured!
+
+root@gitlab:/etc/gitlab# gitlab-ctl restart
+ok: run: alertmanager: (pid 2534) 0s
+ok: run: gitaly: (pid 2546) 0s
+ok: run: gitlab-exporter: (pid 2567) 1s
+ok: run: gitlab-kas: (pid 2658) 0s
+ok: run: gitlab-workhorse: (pid 2670) 0s
+ok: run: logrotate: (pid 2686) 0s
+ok: run: nginx: (pid 2692) 1s
+ok: run: postgres-exporter: (pid 2704) 0s
+ok: run: postgresql: (pid 2713) 1s
+ok: run: prometheus: (pid 2722) 0s
+timeout: run: puma: (pid 1865) 220s
+ok: run: redis: (pid 2778) 0s
+ok: run: redis-exporter: (pid 2784) 1s
+ok: run: sidekiq: (pid 2793) 0s
+ok: run: sshd: (pid 2799) 0s
 ```
 
+<https://docs.gitlab.cn/14.0/omnibus/settings/configuration.html>
+
+
+```dos
+docker login registry.gitlab.mydevopsrealprojects.com:5005
+
+
+/etc/gitlab/initial_root_password
+
+root@gitlab:/etc/gitlab# cat *.json | grep pass
+    "admin_password": "cbbc2e845c53d8dd685938f04e6b9c2c",
+    "metrics_basic_auth_password": null,
+```
 
 Click **"New project"** to create your first project -> Click **"Create blank project"** -> Type your project name in **"Project Name"** -> Select **"Public"** and click **"Create project"** -> Go to the new project you just created, and go to **"Setting"** -> **"CI/CD"** -> expand **"Runners"** section. **Make a note** of **"URL** and **registration token** in **"Specific runners"** section for below runner installation used
 
