@@ -7,12 +7,12 @@ Works
 
 ## Steps
 
-### 1. Deploy a Jenkins docker container with **docker-compose**
+### 1. Deploy a Jenkins docker container with **docker compose**
 
 ```bash
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
 cd udemy-devops-9projects-free/002-JenkinsCICD
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 2. Open your **browser** and go to the Jenkins UI website (<http://<JenkinsHostIP>>)

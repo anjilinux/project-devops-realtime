@@ -7,7 +7,7 @@ Doesn't work!
 ## Issues
 
 ```dos
-C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker-compose up -d
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker compose up -d
 [+] Running 2/3
  - Container 003-gitlabcicd-web-1            Starting                                                                                                                                                                        2.2s
  - Container 003-gitlabcicd-gitlab-runner-1  Started                                                                                                                                                                         2.2s

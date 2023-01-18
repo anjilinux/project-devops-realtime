@@ -6,12 +6,20 @@ Works!
 
 ## Steps
 
-## 1. Run the docker containers with **docker-compose**
+## 1. Run the docker containers with **docker compose**
+
+Docker login with the GitHub token
+
+```bash
+docker login ghcr.io -u briansu2004 --password-stdin
+```
+
+Docker compose
 
 ```bash
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
 cd udemy-devops-9projects-free/003-GitlabCICD
-docker-compose up -d
+docker compose up -d
 ```
 
 ## 2. Add below entry in your **hosts** file
