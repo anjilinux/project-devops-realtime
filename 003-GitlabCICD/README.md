@@ -119,7 +119,7 @@ gitlab-runner verify --delete
 
 | #  | Env  | Y/N  | Recommended   |  Comment |
 |---|---|---|---|---|
-| 1 | Windows only | ? | ? |   |
+| 1 | Windows only | N | N |   |
 | 2 | Windows + Ubuntu | Y | Y |   |
 | 3 | Mac only | N | N |   |
 | 4 | Mac + Ubuntu | Y | Y |   |

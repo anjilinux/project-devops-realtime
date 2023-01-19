@@ -1,8 +1,8 @@
 # Project 003: Gitlab CICD Pipeline
 
-Windows + Ubuntu
+Windows only
 
-Works
+Looks like it won't work
 
 ## Steps
 
