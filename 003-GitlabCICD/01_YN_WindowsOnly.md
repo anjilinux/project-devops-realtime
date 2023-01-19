@@ -6,69 +6,59 @@ Works?
 
 ## Steps
 
-## 1. Run the docker containers with **docker compose**
+## 1. Config the gitlab_domain_name
 
-Docker login with the GitHub token
+In this lab, we will use `mydevopsrealprojects.com` as the gitlab_domain_name.
 
-```bash
-docker login ghcr.io -u briansu2004
-```
+Hence the gitlab instance URL is `http://gitlab.mydevopsrealprojects.com`
 
-Docker compose
+`docker-compose.yml`
 
-```bash
-git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
-cd udemy-devops-9projects-free/003-GitlabCICD
-docker compose up -d
-```
-
-## 2. Add below entry in your **hosts** file (skip???)
+## 2. Configure the **hosts** file
 
 Windows: `C:\Windows\System32\drivers\etc\hosts`
 
 Unix / Mac: `/etc/hosts`
 
-Once it is done, open your **browser** and go to <<https://<your_gitlab_domain_name>>>
-
-(e.g. <https://gitlab.mydevopsrealprojects.com/>)
-
-```bash
-<GITLAB SERVER IP>  <YOUR DOMAIN NAME in docker-compose.yaml> 
-# For example
-# 192.168.2.61 gitlab.mydevopsrealprojects.com registry.gitlab.mydevopsrealprojects.com
-# 127.0.0.1 gitlab.mydevopsrealprojects.com 
-# 127.0.0.1 registry.gitlab.mydevopsrealprojects.com
+```dos
+127.0.0.1 gitlab.mydevopsrealprojects.com
+127.0.0.1 registry.gitlab.mydevopsrealprojects.com
 ```
 
-NOTE: if you are trying to use `localhost` as domain name, you have to use following command to get the ip mapping of the host. see detail in [post](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach):
+## 3. Config the initial root password
 
-```bash
-# in the host machine
-$ sudo ip addr show docker0
-  docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
-    link/ether 56:84:7a:fe:97:99 brd ff:ff:ff:ff:ff:ff
-    inet 172.17.42.1/16 scope global docker0
-       valid_lft forever preferred_lft forever
-    inet6 fe80::5484:7aff:fefe:9799/64 scope link
-       valid_lft forever preferred_lft forever
+```yml
+    hostname: 'gitlab.mydevopsrealprojects.com'
+    environment:
+      GITLAB_ROOT_PASSWORD: "Password2023#"
+      EXTERNAL_URL: "http://gitlab.mydevopsrealprojects.com"
+      GITLAB_OMNIBUS_CONFIG: |
+        gitlab_rails['initial_root_password'] = "Password2023#"
 ```
 
-In the example, `inet 172.17.42.1/16` will be the mapping of host machine. Then in the `/etc/hosts` you can add entry as following:
+## 4. Docker compose
 
-```bash
-# example 
-# 172.17.42.1 gitlab.localhost  registry.gitlab.localhost
+Docker login with the GitHub token
+
+```dos
+docker login ghcr.io -u briansu2004
 ```
 
-The main reason here is `localhost` or `127.0.0.1` will also be specified by containers network. if you update `/etc/hosts` with `127.0.0.1  localhost gitlab.localhost  registry.gitlab.localhost`, the container will try to treat itself as `localhost` in stead of host machine.
+Docker compose
 
-## 3. Login to your gitlab web and get the token
+```dos
+git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
+cd udemy-devops-9projects-free/003-GitlabCICD
+docker compose up -d
+```
+
+## 5. Login to your GitLab web
 
 Wait for about **5 mins** for the server to fully start up.
 
-Then login to the **Gitlab website (<<https://<YOUR_GITLAB_SERVER_IP>>>)** with the username `root` and the password defined in your `docker-compose.yaml`, which should be the value for env varible `GITLAB_ROOT_PASSWORD`.
+Then go to [http://gitlab.mydevopsrealprojects.com](http://gitlab.mydevopsrealprojects.com) and login the username `root` and the password.
 
-[https://127.0.0.1](https://127.0.0.1)
+## 6. get the GitLab registration token
 
 Click **"New project"** to create your first project
 
@@ -100,22 +90,19 @@ And this registration token:
 
 `GR1348941ZPMy4MzPUq9wyYkb1NdN`
 
-## 4. Update certificates
+## 7. Update certificates
 
 Since the initial Gitlab server **certificate** is missing some info and cannot be used by gitlab runner, we may have to **regenerate** a new one and **reconfigure** in the gitlab server. Run below commands:
 
-If `/etc/gitlab/ssl` is present:
+```dos
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=web -q
+bc3466472cb3
 
-```bash
-docker exec -it $(docker ps -f name=web -q) bash
-mkdir /etc/gitlab/ssl_backup
-mv /etc/gitlab/ssl/* /etc/gitlab/ssl_backup
-...
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=runner -q 
+8218eac81731
 ```
 
-Otherwise
-
-```bash
+```dos
 docker exec -it $(docker ps -f name=web -q) bash
 mkdir /etc/gitlab/ssl
 cd /etc/gitlab/ssl
@@ -138,7 +125,7 @@ exit
 
 Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
 
-```bash
+```dos
 docker exec -it $(docker ps -f name=web -q) bash
 # Note: Make sure to replace below `YOUR_GITLAB_DOMAIN` with your own domain name. For example, mydevopsrealprojects.com
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
@@ -176,7 +163,7 @@ exit
 
 In order to make **docker login** work, you need to add the **certificate** in docker certs folder
 
-```bash
+```dos
 # Login the host you are going to run the docker commands
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
@@ -203,7 +190,7 @@ Login Succeeded
 
 Login to gitlab-runner and run commands below. Please note the tag below has to match with the `tags` section in `.gitlab-ci.yml` file:
 
-```bash
+```dos
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/gitlab.$YOUR_GITLAB_DOMAIN.crt
 docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
@@ -254,7 +241,7 @@ shell
 
 If success, you will see below message:
 
-```bash
+```dos
 Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
 
 Configuration (with the authentication token) was saved in "/etc/gitlab-runner/config.toml" 
@@ -268,7 +255,7 @@ Once you finish above step, you should be able to see an available running in th
 
 **Git clone** from your gitlab project repo to your local and copy necessary files from our devopsdaydayup lab repo (in the same folder as this README.md)
 
-```bash
+```dos
 git clone <URL from your gitlab server repo>
 cd <your project name folder>
 cp /path/to/devopsdaydayup/003-GitlabCICD/{app.py,Dockerfile,requirements.txt,.gitlab-ci.yaml,.gitlab-ci.yml}  <your gitlab repo>
