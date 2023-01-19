@@ -10,6 +10,12 @@ For example:
 
 ## gitlab.rb
 
+
+
+<https://docs.gitlab.cn/14.0/omnibus/settings/configuration.html>
+
+
+
 ```dos
 root@gitlab:/etc/gitlab# gitlab-ctl reconfigure
 ffi-libarchive could not be loaded, libarchive is probably not installed on system, archive_file will not be available
