@@ -52,6 +52,16 @@ cd udemy-devops-9projects-free/003-GitlabCICD
 docker compose up -d
 ```
 
+The following container IDs will be used in many steps.
+
+```dos
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=web -q
+bc3466472cb3
+
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=runner -q 
+8218eac81731
+```
+
 ## 5. Login to your GitLab web
 
 Wait for about **5 mins** for the server to fully start up.
@@ -95,40 +105,31 @@ And this registration token:
 Since the initial Gitlab server **certificate** is missing some info and cannot be used by gitlab runner, we may have to **regenerate** a new one and **reconfigure** in the gitlab server. Run below commands:
 
 ```dos
-C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=web -q
-bc3466472cb3
-
-C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=runner -q 
-8218eac81731
-```
-
-```dos
-docker exec -it $(docker ps -f name=web -q) bash
+docker exec -it bc3466472cb3 bash
 mkdir /etc/gitlab/ssl
 cd /etc/gitlab/ssl
 openssl genrsa -out ca.key 2048
 openssl req -new -x509 -days 365 -key ca.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=Acme Root CA" -out ca.crt
-
-# Note: Make sure to replace below `YOUR_GITLAB_DOMAIN` with your own domain name. For example, mydevopsrealprojects.com.
-
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 openssl req -newkey rsa:2048 -nodes -keyout gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out gitlab.$YOUR_GITLAB_DOMAIN.csr
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out gitlab.$YOUR_GITLAB_DOMAIN.crt
+```
 
-# Certificate for nginx (container registry)
+Certificate for nginx (container registry)
+
+```dos
 openssl req -newkey rsa:2048 -nodes -keyout registry.gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out registry.gitlab.$YOUR_GITLAB_DOMAIN.csr
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN,DNS:registry.gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in registry.gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
 exit
 ```
 
-## 5. Enable **container register**
+## 8. Enable container register
 
 Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
 
 ```dos
-docker exec -it $(docker ps -f name=web -q) bash
-# Note: Make sure to replace below `YOUR_GITLAB_DOMAIN` with your own domain name. For example, mydevopsrealprojects.com
-export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
+docker exec -it bc3466472cb3 bash
+
 cat >> /etc/gitlab/gitlab.rb <<EOF
 
  registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5005'
@@ -152,8 +153,11 @@ cat >> /etc/gitlab/gitlab.rb <<EOF
  registry_nginx['enable'] = true
  registry_nginx['listen_port'] = 5005
 EOF
+```
 
-# Reconfigure the gitlab to apply above change
+Reconfigure the gitlab to apply above change
+
+```dos
 gitlab-ctl reconfigure
 gitlab-ctl restart
 exit
