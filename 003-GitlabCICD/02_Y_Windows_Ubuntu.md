@@ -18,9 +18,18 @@ Hence the gitlab instance URL is `http://gitlab.mydevopsrealprojects.com`
 
 Windows: `C:\Windows\System32\drivers\etc\hosts`
 
-Unix / Mac: `/etc/hosts`
+In local Windows's hosts file `C:\Windows\System32\drivers\etc\hosts`
 
 ```dos
+192.168.33.10 gitlab.mydevopsrealprojects.com
+192.168.33.10 registry.gitlab.mydevopsrealprojects.com
+```
+
+Unix / Mac: `/etc/hosts`
+
+In Vagrant Ubuntu's hosts file `/etc/hosts`
+
+```bash
 127.0.0.1 gitlab.mydevopsrealprojects.com
 127.0.0.1 registry.gitlab.mydevopsrealprojects.com
 ```
@@ -50,16 +59,6 @@ Docker compose
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
 cd udemy-devops-9projects-free/003-GitlabCICD
 docker compose up -d
-```
-
-The following container IDs will be used in many steps.
-
-```dos
-C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=web -q
-bc3466472cb3
-
-C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=runner -q 
-8218eac81731
 ```
 
 ## 5. Login to your GitLab web
@@ -98,14 +97,16 @@ Register the runner with this URL:
 
 And this registration token:
 
-`GR1348941ZPMy4MzPUq9wyYkb1NdN`
+`GR1348941B7RskqMxf9685xNEJzpq`
+
+![1674334798862](image/02_Y_Windows_Ubuntu/1674334798862.png)
 
 ## 7. Update certificates
 
 Since the initial Gitlab server **certificate** is missing some info and cannot be used by gitlab runner, we may have to **regenerate** a new one and **reconfigure** in the gitlab server. Run below commands:
 
 ```dos
-docker exec -it bc3466472cb3 bash
+docker exec -it $(docker ps -f name=web -q) bash
 mkdir /etc/gitlab/ssl
 cd /etc/gitlab/ssl
 openssl genrsa -out ca.key 2048
@@ -114,6 +115,7 @@ export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 echo $YOUR_GITLAB_DOMAIN
 openssl req -newkey rsa:2048 -nodes -keyout gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out gitlab.$YOUR_GITLAB_DOMAIN.csr
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out gitlab.$YOUR_GITLAB_DOMAIN.crt
+ls -l
 ```
 
 Certificate for nginx (container registry)
@@ -127,12 +129,61 @@ cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
 exit
 ```
 
+```bash
+root@gitlab:/etc/gitlab/ssl# cat gitlab.$YOUR_GITLAB_DOMAIN.crt
+-----BEGIN CERTIFICATE-----
+MIIDijCCAnKgAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7swDQYJKoZIhvcNAQEL
+BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
+A1UECgwKQWNtZSwgSW5jLjEVMBMGA1UEAwwMQWNtZSBSb290IENBMB4XDTIzMDEy
+MTIxMTAxNFoXDTI0MDEyMTIxMTAxNFowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
+AkdEMQswCQYDVQQHDAJTWjETMBEGA1UECgwKQWNtZSwgSW5jLjEjMCEGA1UEAwwa
+Ki5teWRldm9wc3JlYWxwcm9qZWN0cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
+DwAwggEKAoIBAQDT9CNE8dwsDMF3QYSpsfTOeUwh/4U4b92VCzniwlpITxf7Tvwu
+7D39to7yDbwNl8JNBR7dCqdgeRljLiswW7G1UhQJ+hh7hYTrypTfrkWM/J759kpo
+y6PjuaEU9MVPfk00LR9WLuZJ8PPFK+cU+UT1IRf2xpknr+/25OrBUKJRF1EbwQgE
+sIsXbTuDWlcQHnIztim5L7ie2NpzIH/weT6V7KngvhAL16HUlpUvrCfSVd7fDoZN
+K7L9DJ0N+TxZ0P6ejX6NZxVeoLqNVGlbdaJjUrBhT3EGBjvXe3jevPKSoTNnO6+2
+WFu6wkSzD33G0ZYtqHUtSkszxfAQ2zWkOJjVAgMBAAGjSDBGMEQGA1UdEQQ9MDuC
+GG15ZGV2b3BzcmVhbHByb2plY3RzLmNvbYIfZ2l0bGFiLm15ZGV2b3BzcmVhbHBy
+b2plY3RzLmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAX0DV9YZqpA69N5++ANJdcSw5
+lixO7j27wnwBMiX1s+eKZogXMNuCqkCe6jJkFh/QurxEfM+914ayzJBfv+F/Znjx
+i8ehHdtuhlyVWRi5KwbLP9T28TnRcVo4lG1TyvdgyM4plEaRzT0U7IlKbCkbb78U
+0IrsfzP33n6W5zxLv7ZpGq/YQ8A3vTxOGuxw4i9OAZedW1QA6wlcOeFaNBaST0jy
+tP4uqUBrj9wTxRz/KHxxx30gFs87ZV/MK4sWGPYjzU0ENGUzeHtkfeVsmybDcq5r
+s91rZfheAtlTJpraTOq2KBxx1IqSF45dNOONmmjVEMo5aECBIr3ZEO4msu3cLQ==
+-----END CERTIFICATE-----
+
+root@gitlab:/etc/gitlab/ssl# cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
+-----BEGIN CERTIFICATE-----
+MIIDtDCCApygAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7wwDQYJKoZIhvcNAQEL
+BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
+A1UECgwKQWNtZSwgSW5jLjEVMBMGA1UEAwwMQWNtZSBSb290IENBMB4XDTIzMDEy
+MTIxMTA0MloXDTI0MDEyMTIxMTA0MlowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
+AkdEMQswCQYDVQQHDAJTWjETMBEGA1UECgwKQWNtZSwgSW5jLjEjMCEGA1UEAwwa
+Ki5teWRldm9wc3JlYWxwcm9qZWN0cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
+DwAwggEKAoIBAQCni7H94DdILJ1Sh7Bhb03JhSAu6em0uVBcQkK2iS0AX43e/xJ7
+McNws5qbiCEjmQODalBXYkFquWRj6kwiEuHYUYqPZlce+wfLlg/f7Zrf/EE73gS2
+1D3uhUEMISa34NTnUHXo87NlZ5Ybp6a/GgTwdTuVzwuD9svuGNePInKULYzeAQ6k
+quOyP3gRu1Gg3qWLeQ64YuBz+ftktXmvIB9e+iKkl4Vv/2gAI9gXfxVZ50GzLmnB
+r3WYRiOimg3WseVo5eNvIRsdKQLcMj9F8AvKCC37GpnzKIvTjq/nFfLnEri0T1AD
+06nHEMT3TbnCLOmILZM8hkE27kuBR9x5BY2rAgMBAAGjcjBwMG4GA1UdEQRnMGWC
+GG15ZGV2b3BzcmVhbHByb2plY3RzLmNvbYIfZ2l0bGFiLm15ZGV2b3BzcmVhbHBy
+b2plY3RzLmNvbYIocmVnaXN0cnkuZ2l0bGFiLm15ZGV2b3BzcmVhbHByb2plY3Rz
+LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAPJGP5/eAzF3wrjz8PHFDgbw9xX9iq2SF
+T3r9te3gohmulGTC6HI1hBaZomGo0GffM4sl1PX+pzpMlI6m5E5iaA6/+PeuFsr/
+s0/x9AemPkqGlm2cQMwrdDPss1LHuhIz+rlfuuzKWQpl3bnVK/oISpINOb1VYxYF
+7eJxh86CueUqnqLTSFltUdARteW8XRu/1F2aPvqKsVdArGmOre3SLIKVcBxx3Nmw
+oexqTnI9PMOmK7V0s8PYUlXTXW8UQX2X8/wMWChziwN1XlZzuhnFJZ/0e9K/LelA
+ZGCHDw8t3O8UJhfMKKVBdudgspEYGrzWt7UbrekR32QLTvPpx36aQQ==
+-----END CERTIFICATE-----
+```
+
 ## 8. Enable container register
 
 Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
 
 ```dos
-docker exec -it bc3466472cb3 bash
+docker exec -it $(docker ps -f name=web -q) bash
 
 cat >> /etc/gitlab/gitlab.rb <<EOF
 
@@ -172,26 +223,28 @@ exit
 In order to make **docker login** work, we need to add the **certificate** in the docker certs folder.
 
 ```dos
-# Do the following in the host you are going to run the docker commands
-set YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
-echo %YOUR_GITLAB_DOMAIN%
-
-sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
-
-sudo docker cp bc3466472cb3:/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
+# Login the host you are going to run the docker commands
+# In the Vagrant Ubuntu
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
+echo $YOUR_GITLAB_DOMAIN
+sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
+sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
 sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
 
-->
-
 # Test docker login and you should be able to login now
-docker login registry.gitlab.%YOUR_GITLAB_DOMAIN%:5055
+# Note: for Windows we can't use the default 5005 as it is blocked
+docker login registry.gitlab.$YOUR_GITLAB_DOMAIN:5055 
 Username: root
-Password: 
+Password: Password2023#
+
 WARNING! Your password will be stored unencrypted in /home/devops/.docker/config.json.
 Configure a credential helper to remove this warning. See
 https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
+
+# You can also test if the docker image push works once login successfully
+# Login to your gitlab server web UI and go to the project you created, and then go to "Packages and registries" -> "Container Registry", you should be able to see the valid registry URL you suppose to use in order to build and push your image. For example, `docker build -t registry.gitlab.devops20221020.com:5005/gitlab-instance-d350f73c/first-projct .` (See below screenshot)
 ```
 
 Test if the docker image push works once login successfully -
@@ -200,7 +253,7 @@ Login to the gitlab server web UI and go to the project created, and then go to 
 
 e.g. `docker build -t registry.gitlab.mydevopsrealprojects.com:5005/gitlab-instance-d350f73c/first-projct .`
 
-![container-registry](images/container-registry.png)
+
 
 ## 10. Configure **gitlab-runner**
 
