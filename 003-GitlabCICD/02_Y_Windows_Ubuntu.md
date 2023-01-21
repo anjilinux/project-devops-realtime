@@ -244,7 +244,6 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 
 # You can also test if the docker image push works once login successfully
-# Login to your gitlab server web UI and go to the project you created, and then go to "Packages and registries" -> "Container Registry", you should be able to see the valid registry URL you suppose to use in order to build and push your image. For example, `docker build -t registry.gitlab.devops20221020.com:5005/gitlab-instance-d350f73c/first-projct .` (See below screenshot)
 ```
 
 Test if the docker image push works once login successfully -
@@ -261,14 +260,22 @@ Login to gitlab-runner and run commands below.
 
 Please note the tag below has to match with the `tags` section in `.gitlab-ci.yml` file:
 
-```dos
-set YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
-docker exec bc3466472cb3 cat /etc/gitlab/ssl/gitlab.%YOUR_GITLAB_DOMAIN%.crt
-docker exec bc3466472cb3 cat /etc/gitlab/ssl/registry.gitlab.%YOUR_GITLAB_DOMAIN%.crt
+```yml
+  tags:
+    - test
 ```
 
 ```dos
-docker exec -it 8218eac81731 bash
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
+echo $YOUR_GITLAB_DOMAIN
+docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/gitlab.$YOUR_GITLAB_DOMAIN.crt
+docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
+```
+
+```dos
+docker exec -it $(docker ps -f name=gitlab-runner -q) bash
+cd /usr/local/share/ca-certificates/
+ls -l
 
 cat > /usr/local/share/ca-certificates/gitlab-server.crt <<EOF
 # <Paste above gitlab server certificate here>
@@ -276,25 +283,25 @@ EOF
 
 cat > /usr/local/share/ca-certificates/gitlab-server.crt <<EOF
 -----BEGIN CERTIFICATE-----
-MIIDijCCAnKgAwIBAgIUS4AXc0GZzSKJHSOrY8xrLNvZd7QwDQYJKoZIhvcNAQEL
+MIIDijCCAnKgAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7swDQYJKoZIhvcNAQEL
 BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
-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
+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
-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
+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
-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
+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
 -----END CERTIFICATE-----
 EOF
 
@@ -304,31 +311,30 @@ EOF
 
 cat > /usr/local/share/ca-certificates/registry.gitlab-server.crt <<EOF
 -----BEGIN CERTIFICATE-----
-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
+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
-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
+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
-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
+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
-LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEA5Kjw/ntoVQkKJvaubO+3P40A+uel4hlr
-FDp9N5k6bvMw7Hpk4c9kiiyPreS88xHedyifG9QB9R6s24Zm25sBShFibSMDoWiC
-M1ugNKEcRfuuF7FAeNFDym675QOe2hjwG6wU3Joq8UVGhyS63Zvy8AEBnuxisntW
-ySq23FINjO0ojXns2lqeCG3VXHCq29xHC4fYx71V3yUSiM/0OrycoZBYckt8aOMd
-zjNGnBTsBMc7/0vQdCxIfJvnwl8GBGxIfeWFPzSQ7nOF9ohhChtAffhSgoHL/noE
-O92JLyQLqQ3qIq/isawNEUMBO1MUASTAAmGTajRO7a6+k07KC/04Mw==
+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        
 -----END CERTIFICATE-----
 EOF
 
-cd /usr/local/share/ca-certificates/
-ls -l 
+ls -l
 
 update-ca-certificates
 gitlab-runner register 
@@ -340,7 +346,7 @@ https://gitlab.mydevopsrealprojects.com
 
 Enter the registration token:
 <Paste the token retrieved in Step 6>
-GR1348941ZPMy4MzPUq9wyYkb1NdN
+GR1348941B7RskqMxf9685xNEJzpq
 
 Enter a description for the runner:
 [bad518d25b44]: test
