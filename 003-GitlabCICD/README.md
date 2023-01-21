@@ -130,7 +130,7 @@ gitlab-runner verify --delete
 
 [Mac Only](03_YN_MacOnly.md)
 
-[With_Mac_Ubuntu](04_YN_Mac_Ubuntu.md)
+[With_Mac_Ubuntu](04_Y_Mac_Ubuntu.md)
 
 ## My troubleshooting
 

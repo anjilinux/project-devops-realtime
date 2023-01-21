@@ -26,6 +26,12 @@ nameserver 8.8.8.8
 nameserver 8.8.4.4
 ```
 
+If `resolv.conf -> ../run/systemd/resolve/stub-resolv.conf`
+
+```
+sudo vim /run/systemd/resolve/stub-resolv.conf
+```
+
 ## [Vagrant] Port 53 error
 
 - Issue
