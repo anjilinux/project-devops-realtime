@@ -342,7 +342,7 @@ gitlab-runner register
 
 ```dos
 Enter the GitLab instance URL (for example, https://gitlab.com/):
-https://gitlab.mydevopsrealprojects.com
+http://gitlab.mydevopsrealprojects.com    # Note: don't use https://gitlab.mydevopsrealprojects.com
 
 Enter the registration token:
 <Paste the token retrieved in Step 6>
@@ -363,6 +363,22 @@ Enter an executor: ssh, docker+machine, docker-ssh, docker, parallels, shell, vi
 shell
 ```
 
+If error -
+
+```bash
+WARNING: Support for registration tokens and runner parameters in the 'register' command has been deprecated in GitLab Runner 15.6 and will be replaced with support for authentication tokens. For more information, see https://gitlab.com/gitlab-org/gitlab/-/issues/380872 
+ERROR: Registering runner... failed                 runner=GR1348941B7RskqMx status=couldn't execute POST against https://gitlab.mydevopsrealprojects.com/api/v4/runners: Post "https://gitlab.mydevopsrealprojects.com/api/v4/runners": dial tcp 172.20.0.4:443: connect: connection refused
+PANIC: Failed to register the runner.
+```
+
+install net-tools and iputils-ping
+
+```bash
+apt update && apt upgrade
+apt install net-tools
+apt install iputils-ping
+```
+
 If success, you will see below message:
 
 ```dos
@@ -372,8 +388,9 @@ Configuration (with the authentication token) was saved in "/etc/gitlab-runner/c
 root@bad518d25b44:/usr/local/share/ca-certificates# cat /etc/gitlab-runner/config.toml 
 ```
 
-Once you finish above step, you should be able to see an available running in the project's CICD Runners section (see below screenshoot).
-![gitlab-runner](images/gitlab-runner.jpg)
+Once you finish above step, you should be able to see an available running in the project's CICD Runners section.
+
+![1674338440742](image/02_Y_Windows_Ubuntu/1674338440742.png)
 
 ## 11. Copy necessary files into gitlab project repo
 

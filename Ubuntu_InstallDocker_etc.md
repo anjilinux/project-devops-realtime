@@ -1,4 +1,4 @@
-# How to set up Ubuntu lab
+# How to set up Ubuntu
 
 ## Install Docker in Ubuntu
 
@@ -49,4 +49,18 @@ Add below entries to `/etc/resolv.conf`
 ```bash
 nameserver 8.8.8.8 
 nameserver 8.8.4.4
+```
+
+## ifconfig
+
+```bash
+apt update && apt upgrade
+apt install net-tools
+```
+
+## ping
+
+```bash
+apt update && apt upgrade
+apt install iputils-ping
 ```
