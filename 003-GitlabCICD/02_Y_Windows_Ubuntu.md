@@ -253,7 +253,7 @@ Login to the gitlab server web UI and go to the project created, and then go to 
 
 e.g. `docker build -t registry.gitlab.mydevopsrealprojects.com:5005/gitlab-instance-d350f73c/first-projct .`
 
-
+![1674337330164](image/02_Y_Windows_Ubuntu/1674337330164.png)
 
 ## 10. Configure **gitlab-runner**
 
