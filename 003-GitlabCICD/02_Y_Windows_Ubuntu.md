@@ -30,6 +30,10 @@ Unix / Mac: `/etc/hosts`
 In Vagrant Ubuntu's hosts file `/etc/hosts`
 
 ```bash
+sudo vi /etc/hosts
+```
+
+```bash
 127.0.0.1 gitlab.mydevopsrealprojects.com
 127.0.0.1 registry.gitlab.mydevopsrealprojects.com
 ```
@@ -41,7 +45,7 @@ In Vagrant Ubuntu's hosts file `/etc/hosts`
     environment:
       GITLAB_ROOT_PASSWORD: "Password2023#"
       EXTERNAL_URL: "http://gitlab.mydevopsrealprojects.com"
-      GITLAB_OMNIBUS_CONFIG: |
+      GITLAB_OMNIBUS_CONFIG: |ping gitlab.mydevopsrealprojects.com
         gitlab_rails['initial_root_password'] = "Password2023#"
 ```
 
@@ -102,7 +106,7 @@ Click **"New project"** to create your first project
 
 ![1674334798862](image/02_Y_Windows_Ubuntu/1674334798862.png)
 
-We need to use the URL `http://gitlab.mydevopsrealprojects.com/` and the registration token to Register the runner.
+We need to use the URL `http://gitlab.mydevopsrealprojects.com/` (not `https`) and the registration token to Register the runner.
 
 ## 7. Update the certificates
 
@@ -110,14 +114,21 @@ Since the initial Gitlab server **certificate** is missing some info and can't b
 
 ```dos
 docker exec -it $(docker ps -f name=web -q) bash
+
 mkdir /etc/gitlab/ssl
 cd /etc/gitlab/ssl
+
 openssl genrsa -out ca.key 2048
+
 openssl req -new -x509 -days 365 -key ca.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=Acme Root CA" -out ca.crt
+
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 echo $YOUR_GITLAB_DOMAIN
+
 openssl req -newkey rsa:2048 -nodes -keyout gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out gitlab.$YOUR_GITLAB_DOMAIN.csr
+
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out gitlab.$YOUR_GITLAB_DOMAIN.crt
+
 ls -l
 ```
 
@@ -125,10 +136,13 @@ Certificate for nginx (container registry)
 
 ```dos
 openssl req -newkey rsa:2048 -nodes -keyout registry.gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out registry.gitlab.$YOUR_GITLAB_DOMAIN.csr
+
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN,DNS:registry.gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in registry.gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
+
 ls -l
 cat gitlab.$YOUR_GITLAB_DOMAIN.crt
 cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
+
 exit
 ```
 
@@ -138,6 +152,8 @@ Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
 
 ```dos
 docker exec -it $(docker ps -f name=web -q) bash
+
+tail -25 /etc/gitlab/gitlab.rb
 
 cat >> /etc/gitlab/gitlab.rb <<EOF
 
@@ -170,7 +186,9 @@ Reconfigure the gitlab to apply above change
 
 ```dos
 gitlab-ctl reconfigure
+
 gitlab-ctl restart
+
 exit
 ```
 
