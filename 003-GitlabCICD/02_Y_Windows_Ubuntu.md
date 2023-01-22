@@ -187,67 +187,7 @@ docker exec -it $(docker ps -f name=web -q) bash
 
 cat >> /etc/gitlab/gitlab.rb <<EOF
 
- registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5005'
- gitlab_rails['registry_enabled'] = true
- gitlab_rails['registry_host'] = "registry.gitlab.$YOUR_GITLAB_DOMAIN"
- gitlab_rails['registry_port'] = "5005"
- gitlab_rails['registry_path'] = "/var/opt/gitlab/gitlab-rails/shared/registry"
- gitlab_rails['registry_api_url'] = "http://127.0.0.1:5000"
- gitlab_rails['registry_key_path'] = "/var/opt/gitlab/gitlab-rails/certificate.key"
- registry['enable'] = true
- registry['registry_http_addr'] = "127.0.0.1:5000"
- registry['log_directory'] = "/var/log/gitlab/registry"
- registry['env_directory'] = "/opt/gitlab/etc/registry/env"
- registry['env'] = {
-   'SSL_CERT_DIR' => "/opt/gitlab/embedded/ssl/certs/"
- }
- # Note: Make sure to update below 'rootcertbundle' default value 'certificate.crt" to 'gitlab-registry.crt', otherwise you may get error.
- registry['rootcertbundle'] = "/var/opt/gitlab/registry/gitlab-registry.crt"
- nginx['ssl_certificate'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt"
- nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.key"
- registry_nginx['enable'] = true
- registry_nginx['listen_port'] = 5005
-EOF
-```
-
--> ???
-
-```dos
-docker exec -it $(docker ps -f name=web -q) bash
-
-cat >> /etc/gitlab/gitlab.rb <<EOF
-
- registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5055'
- gitlab_rails['registry_enabled'] = true
- gitlab_rails['registry_host'] = "registry.gitlab.$YOUR_GITLAB_DOMAIN"
- gitlab_rails['registry_port'] = "5055"
- gitlab_rails['registry_path'] = "/var/opt/gitlab/gitlab-rails/shared/registry"
- gitlab_rails['registry_api_url'] = "http://127.0.0.1:5000"
- gitlab_rails['registry_key_path'] = "/var/opt/gitlab/gitlab-rails/certificate.key"
- registry['enable'] = true
- registry['registry_http_addr'] = "127.0.0.1:5000"
- registry['log_directory'] = "/var/log/gitlab/registry"
- registry['env_directory'] = "/opt/gitlab/etc/registry/env"
- registry['env'] = {
-   'SSL_CERT_DIR' => "/opt/gitlab/embedded/ssl/certs/"
- }
- # Note: Make sure to update below 'rootcertbundle' default value 'certificate.crt" to 'gitlab-registry.crt', otherwise you may get error.
- registry['rootcertbundle'] = "/var/opt/gitlab/registry/gitlab-registry.crt"
- nginx['ssl_certificate'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt"
- nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.key"
- registry_nginx['enable'] = true
- registry_nginx['listen_port'] = 5055
-EOF
-```
-
--> ???
-
-```dos
-docker exec -it $(docker ps -f name=web -q) bash
-
-cat >> /etc/gitlab/gitlab.rb <<EOF
-
- registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5055'
+ registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5055'  # Note: for Windows
  gitlab_rails['registry_enabled'] = true
  gitlab_rails['registry_host'] = "registry.gitlab.$YOUR_GITLAB_DOMAIN"
  gitlab_rails['registry_port'] = "5005"
@@ -490,12 +430,14 @@ git push
 
 Once you push the code, you should be able to see the pipeline is automatically triggered under the project -> "CI/CD" -> "Jobs"
 
-![gitlab-ci-pipeline](images/gitlab-ci-pipeline.png)
+![1674347541464](image/02_Y_Windows_Ubuntu/1674347541464.png)
 
 ## 12. Verification
 
-a. Check your hello-world container by visiting the **website** <http://<HOST> IP which is running the docker-compose.yaml>:8080
+a. Check your hello-world container by visiting [http://gitlab.mydevopsrealprojects.com:8080](http://gitlab.mydevopsrealprojects.com:8080)
 
-b. In your **gitlab repo**, update `return "Hello World!"` in `app.py` file. For example, update to `return "Hello World 2022!"`. Save the change and `git add .` and `git commit -am "Update code"` and then `git push`.
+![1674347566528](image/02_Y_Windows_Ubuntu/1674347566528.png)
 
-c. Once the CICD pipeline is completed, you can visit your hello-world web again to see if the content is changed. <http://<HOST> IP which is running the docker-compose.yaml>:8080
+b. In your **gitlab repo**, update `return "Hello New Year!"` in `app.py` file. For example, update to `return "Hello DevOps!"`. Save the change and `git add .` and `git commit -am "Update code"` and then `git push`.
+
+c. Once the CICD pipeline is completed, you can visit your hello-world web again to see if the content is changed.
