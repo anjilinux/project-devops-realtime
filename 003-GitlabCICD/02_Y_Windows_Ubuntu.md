@@ -196,14 +196,23 @@ exit
 
 In order to make **docker login** work, we need to add the **certificate** in the docker certs folder.
 
+<!--
+sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
+sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
+sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
+cat /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/registry.gitlab.mydevopsrealprojects.com.crt
+-->
+
 ```dos
 # Login the host you are going to run the docker commands
 # In the Vagrant Ubuntu
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 echo $YOUR_GITLAB_DOMAIN
-sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
-sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
-sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
+
+sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
+sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055/
+sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
+cat /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055/registry.gitlab.mydevopsrealprojects.com.crt
 
 # Test docker login and you should be able to login now
 # Note: for Windows we can't use the default 5005 as it is blocked
