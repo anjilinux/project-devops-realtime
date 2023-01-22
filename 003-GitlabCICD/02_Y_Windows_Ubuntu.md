@@ -132,57 +132,6 @@ cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
 exit
 ```
 
-e.g.
-
-```bash
-root@gitlab:/etc/gitlab/ssl# cat gitlab.$YOUR_GITLAB_DOMAIN.crt
------BEGIN CERTIFICATE-----
-MIIDijCCAnKgAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7swDQYJKoZIhvcNAQEL
-BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
-A1UECgwKQWNtZSwgSW5jLjEVMBMGA1UEAwwMQWNtZSBSb290IENBMB4XDTIzMDEy
-MTIxMTAxNFoXDTI0MDEyMTIxMTAxNFowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
-AkdEMQswCQYDVQQHDAJTWjETMBEGA1UECgwKQWNtZSwgSW5jLjEjMCEGA1UEAwwa
-Ki5teWRldm9wc3JlYWxwcm9qZWN0cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
-DwAwggEKAoIBAQDT9CNE8dwsDMF3QYSpsfTOeUwh/4U4b92VCzniwlpITxf7Tvwu
-7D39to7yDbwNl8JNBR7dCqdgeRljLiswW7G1UhQJ+hh7hYTrypTfrkWM/J759kpo
-y6PjuaEU9MVPfk00LR9WLuZJ8PPFK+cU+UT1IRf2xpknr+/25OrBUKJRF1EbwQgE
-sIsXbTuDWlcQHnIztim5L7ie2NpzIH/weT6V7KngvhAL16HUlpUvrCfSVd7fDoZN
-K7L9DJ0N+TxZ0P6ejX6NZxVeoLqNVGlbdaJjUrBhT3EGBjvXe3jevPKSoTNnO6+2
-WFu6wkSzD33G0ZYtqHUtSkszxfAQ2zWkOJjVAgMBAAGjSDBGMEQGA1UdEQQ9MDuC
-GG15ZGV2b3BzcmVhbHByb2plY3RzLmNvbYIfZ2l0bGFiLm15ZGV2b3BzcmVhbHBy
-b2plY3RzLmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAX0DV9YZqpA69N5++ANJdcSw5
-lixO7j27wnwBMiX1s+eKZogXMNuCqkCe6jJkFh/QurxEfM+914ayzJBfv+F/Znjx
-i8ehHdtuhlyVWRi5KwbLP9T28TnRcVo4lG1TyvdgyM4plEaRzT0U7IlKbCkbb78U
-0IrsfzP33n6W5zxLv7ZpGq/YQ8A3vTxOGuxw4i9OAZedW1QA6wlcOeFaNBaST0jy
-tP4uqUBrj9wTxRz/KHxxx30gFs87ZV/MK4sWGPYjzU0ENGUzeHtkfeVsmybDcq5r
-s91rZfheAtlTJpraTOq2KBxx1IqSF45dNOONmmjVEMo5aECBIr3ZEO4msu3cLQ==
------END CERTIFICATE-----
-
-root@gitlab:/etc/gitlab/ssl# cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
------BEGIN CERTIFICATE-----
-MIIDtDCCApygAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7wwDQYJKoZIhvcNAQEL
-BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
-A1UECgwKQWNtZSwgSW5jLjEVMBMGA1UEAwwMQWNtZSBSb290IENBMB4XDTIzMDEy
-MTIxMTA0MloXDTI0MDEyMTIxMTA0MlowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
-AkdEMQswCQYDVQQHDAJTWjETMBEGA1UECgwKQWNtZSwgSW5jLjEjMCEGA1UEAwwa
-Ki5teWRldm9wc3JlYWxwcm9qZWN0cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
-DwAwggEKAoIBAQCni7H94DdILJ1Sh7Bhb03JhSAu6em0uVBcQkK2iS0AX43e/xJ7
-McNws5qbiCEjmQODalBXYkFquWRj6kwiEuHYUYqPZlce+wfLlg/f7Zrf/EE73gS2
-1D3uhUEMISa34NTnUHXo87NlZ5Ybp6a/GgTwdTuVzwuD9svuGNePInKULYzeAQ6k
-quOyP3gRu1Gg3qWLeQ64YuBz+ftktXmvIB9e+iKkl4Vv/2gAI9gXfxVZ50GzLmnB
-r3WYRiOimg3WseVo5eNvIRsdKQLcMj9F8AvKCC37GpnzKIvTjq/nFfLnEri0T1AD
-06nHEMT3TbnCLOmILZM8hkE27kuBR9x5BY2rAgMBAAGjcjBwMG4GA1UdEQRnMGWC
-GG15ZGV2b3BzcmVhbHByb2plY3RzLmNvbYIfZ2l0bGFiLm15ZGV2b3BzcmVhbHBy
-b2plY3RzLmNvbYIocmVnaXN0cnkuZ2l0bGFiLm15ZGV2b3BzcmVhbHByb2plY3Rz
-LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAPJGP5/eAzF3wrjz8PHFDgbw9xX9iq2SF
-T3r9te3gohmulGTC6HI1hBaZomGo0GffM4sl1PX+pzpMlI6m5E5iaA6/+PeuFsr/
-s0/x9AemPkqGlm2cQMwrdDPss1LHuhIz+rlfuuzKWQpl3bnVK/oISpINOb1VYxYF
-7eJxh86CueUqnqLTSFltUdARteW8XRu/1F2aPvqKsVdArGmOre3SLIKVcBxx3Nmw
-oexqTnI9PMOmK7V0s8PYUlXTXW8UQX2X8/wMWChziwN1XlZzuhnFJZ/0e9K/LelA
-ZGCHDw8t3O8UJhfMKKVBdudgspEYGrzWt7UbrekR32QLTvPpx36aQQ==
------END CERTIFICATE-----
-```
-
 ## 8. Enable the container register
 
 Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
@@ -213,6 +162,8 @@ cat >> /etc/gitlab/gitlab.rb <<EOF
  registry_nginx['enable'] = true
  registry_nginx['listen_port'] = 5005
 EOF
+
+tail -25 /etc/gitlab/gitlab.rb
 ```
 
 Reconfigure the gitlab to apply above change
@@ -358,6 +309,10 @@ EOF
 ls -l
 
 update-ca-certificates
+
+apt update && apt upgrade
+apt install net-tools iputils-ping
+
 gitlab-runner register 
 ```
 
@@ -367,7 +322,7 @@ http://gitlab.mydevopsrealprojects.com    # Note: don't use https://gitlab.mydev
 
 Enter the registration token:
 <Paste the token retrieved in Step 6>
-GR1348941B7RskqMxf9685xNEJzpq
+GR1348941Khn1MqEz7HzjZk2bJRvx
 
 Enter a description for the runner:
 [bad518d25b44]: test
@@ -397,8 +352,7 @@ install net-tools and iputils-ping
 
 ```bash
 apt update && apt upgrade
-apt install net-tools
-apt install iputils-ping
+apt install net-tools iputils-ping
 ```
 -->
 
