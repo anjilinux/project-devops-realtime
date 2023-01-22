@@ -31,13 +31,17 @@ Understand how to setup/configure Gitlab as CICD pipeline. Familarize with gitla
 | 3 | Mac only | ? | N |   |
 | 4 | Mac + Ubuntu | Y | Y |   |
 
+<!--
 [Windows Only](01_N_WindowsOnly.md)
+-->
 
 [With_Windows_Ubuntu](02_Y_Windows_Ubuntu.md)
 
+<!--
 [Mac Only](03_YN_MacOnly.md)
 
 [With_Mac_Ubuntu](04_Y_Mac_Ubuntu.md)
+-->
 
 <!--
 ## My troubleshooting
