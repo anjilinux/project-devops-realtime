@@ -16,7 +16,7 @@ cd udemy-devops-9projects-free/001-ELKMonitoring
 
 # passwords are in the .env file
 
-docker compose up -d
+docker compose up
 ```
 
 ### 2. Add Elasticsearch CA certificates
