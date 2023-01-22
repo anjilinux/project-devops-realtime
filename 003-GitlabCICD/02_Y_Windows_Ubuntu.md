@@ -337,19 +337,16 @@ ls -l
 
 update-ca-certificates
 
-apt update && apt upgrade
-apt install net-tools iputils-ping
-
 gitlab-runner register 
 ```
 
 ```dos
 Enter the GitLab instance URL (for example, https://gitlab.com/):
-http://gitlab.mydevopsrealprojects.com    # Note: don't use https://gitlab.mydevopsrealprojects.com
+http://gitlab.mydevopsrealprojects.com
 
 Enter the registration token:
 <Paste the token retrieved in Step 6>
-GR1348941Khn1MqEz7HzjZk2bJRvx
+GR1348941XikWdWB9K5DBxBG_VH9_
 
 Enter a description for the runner:
 [bad518d25b44]: test
@@ -381,6 +378,8 @@ install net-tools and iputils-ping
 apt update && apt upgrade
 apt install net-tools iputils-ping
 ```
+
+If still won't work, destroy vagrant image and start over.
 -->
 
 Success messages:
@@ -412,7 +411,7 @@ cd ~/first_project
 cp ~/udemy-devops-9projects-free/003-GitlabCICD/{app.py,Dockerfile,requirements.txt,.gitlab-ci.yml} .
 ls -la
 git add .
-git commit -am "First commit"
+git commit -m "First commit"
 git push
 ```
 
