@@ -432,6 +432,8 @@ Once you push the code, you should be able to see the pipeline is automatically 
 
 ![1674347541464](image/02_Y_Windows_Ubuntu/1674347541464.png)
 
+![1674347770248](image/02_Y_Windows_Ubuntu/1674347770248.png)
+
 ## 12. Verification
 
 a. Check your hello-world container by visiting [http://gitlab.mydevopsrealprojects.com:8080](http://gitlab.mydevopsrealprojects.com:8080)
@@ -441,3 +443,7 @@ a. Check your hello-world container by visiting [http://gitlab.mydevopsrealproje
 b. In your **gitlab repo**, update `return "Hello New Year!"` in `app.py` file. For example, update to `return "Hello DevOps!"`. Save the change and `git add .` and `git commit -am "Update code"` and then `git push`.
 
 c. Once the CICD pipeline is completed, you can visit your hello-world web again to see if the content is changed.
+
+![1674347907820](image/02_Y_Windows_Ubuntu/1674347907820.png)
+
+![1674347883035](image/02_Y_Windows_Ubuntu/1674347883035.png)
