@@ -1,4 +1,4 @@
-# Project 003: Gitlab CICD Pipeline
+# Project 003: GitLab CICD Pipeline
 
 Windows + Ubuntu
 
@@ -6,13 +6,13 @@ Works
 
 ## Steps
 
-## 1. Config the gitlab_domain_name
+## 1. Config the GitLab domain name
 
-In this lab, we will use `mydevopsrealprojects.com` as the gitlab_domain_name.
+In this lab, we will use `mydevopsrealprojects.com` as the GitLab domain name.
 
-Hence the gitlab instance URL is `http://gitlab.mydevopsrealprojects.com`
+Hence the gitlab URL is `http://gitlab.mydevopsrealprojects.com`
 
-`docker-compose.yml`
+We need it in the `docker-compose.yml` file.
 
 ## 2. Configure the **hosts** file
 
@@ -56,6 +56,15 @@ docker login ghcr.io -u briansu2004
 
 Docker compose
 -->
+
+Start Vagrant
+
+```dos
+vagrant up
+vagrant ssh
+```
+
+In Vagrant,
 
 ```dos
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
@@ -452,7 +461,7 @@ git commit -am "Update code"
 git push
 ```
 
-- Monitor the CICD pipeline 
+- Monitor the CICD pipeline
 
 - Once the pipeline is completed, re-visit the hello-world app to verift if the content is changed.
 
