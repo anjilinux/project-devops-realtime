@@ -210,6 +210,66 @@ cat >> /etc/gitlab/gitlab.rb <<EOF
 EOF
 ```
 
+-> ???
+
+```dos
+docker exec -it $(docker ps -f name=web -q) bash
+
+cat >> /etc/gitlab/gitlab.rb <<EOF
+
+ registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5055'
+ gitlab_rails['registry_enabled'] = true
+ gitlab_rails['registry_host'] = "registry.gitlab.$YOUR_GITLAB_DOMAIN"
+ gitlab_rails['registry_port'] = "5055"
+ gitlab_rails['registry_path'] = "/var/opt/gitlab/gitlab-rails/shared/registry"
+ gitlab_rails['registry_api_url'] = "http://127.0.0.1:5000"
+ gitlab_rails['registry_key_path'] = "/var/opt/gitlab/gitlab-rails/certificate.key"
+ registry['enable'] = true
+ registry['registry_http_addr'] = "127.0.0.1:5000"
+ registry['log_directory'] = "/var/log/gitlab/registry"
+ registry['env_directory'] = "/opt/gitlab/etc/registry/env"
+ registry['env'] = {
+   'SSL_CERT_DIR' => "/opt/gitlab/embedded/ssl/certs/"
+ }
+ # Note: Make sure to update below 'rootcertbundle' default value 'certificate.crt" to 'gitlab-registry.crt', otherwise you may get error.
+ registry['rootcertbundle'] = "/var/opt/gitlab/registry/gitlab-registry.crt"
+ nginx['ssl_certificate'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt"
+ nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.key"
+ registry_nginx['enable'] = true
+ registry_nginx['listen_port'] = 5055
+EOF
+```
+
+-> ???
+
+```dos
+docker exec -it $(docker ps -f name=web -q) bash
+
+cat >> /etc/gitlab/gitlab.rb <<EOF
+
+ registry_external_url 'https://registry.gitlab.$YOUR_GITLAB_DOMAIN:5055'
+ gitlab_rails['registry_enabled'] = true
+ gitlab_rails['registry_host'] = "registry.gitlab.$YOUR_GITLAB_DOMAIN"
+ gitlab_rails['registry_port'] = "5005"
+ gitlab_rails['registry_path'] = "/var/opt/gitlab/gitlab-rails/shared/registry"
+ gitlab_rails['registry_api_url'] = "http://127.0.0.1:5000"
+ gitlab_rails['registry_key_path'] = "/var/opt/gitlab/gitlab-rails/certificate.key"
+ registry['enable'] = true
+ registry['registry_http_addr'] = "127.0.0.1:5000"
+ registry['log_directory'] = "/var/log/gitlab/registry"
+ registry['env_directory'] = "/opt/gitlab/etc/registry/env"
+ registry['env'] = {
+   'SSL_CERT_DIR' => "/opt/gitlab/embedded/ssl/certs/"
+ }
+ # Note: Make sure to update below 'rootcertbundle' default value 'certificate.crt" to 'gitlab-registry.crt', otherwise you may get error.
+ registry['rootcertbundle'] = "/var/opt/gitlab/registry/gitlab-registry.crt"
+ nginx['ssl_certificate'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt"
+ nginx['ssl_certificate_key'] = "/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.key"
+ registry_nginx['enable'] = true
+ registry_nginx['listen_port'] = 5005
+EOF
+```
+
 Reconfigure the gitlab to apply above change
 
 ```dos
@@ -230,6 +290,12 @@ echo $YOUR_GITLAB_DOMAIN
 sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
 sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
 sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
+
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
+echo $YOUR_GITLAB_DOMAIN
+sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
+sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055/
+sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
 
 # Test docker login and you should be able to login now
 # Note: for Windows we can't use the default 5005 as it is blocked
@@ -280,7 +346,9 @@ ls -l
 cat > /usr/local/share/ca-certificates/gitlab-server.crt <<EOF
 # <Paste above gitlab server certificate here>
 EOF
+```
 
+<!--
 cat > /usr/local/share/ca-certificates/gitlab-server.crt <<EOF
 -----BEGIN CERTIFICATE-----
 MIIDijCCAnKgAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7swDQYJKoZIhvcNAQEL
@@ -304,11 +372,15 @@ tP4uqUBrj9wTxRz/KHxxx30gFs87ZV/MK4sWGPYjzU0ENGUzeHtkfeVsmybDcq5r
 s91rZfheAtlTJpraTOq2KBxx1IqSF45dNOONmmjVEMo5aECBIr3ZEO4msu3cLQ==
 -----END CERTIFICATE-----
 EOF
+-->
 
+```dos
 cat > /usr/local/share/ca-certificates/registry.gitlab-server.crt <<EOF
 # <Paste above gitlab registry certificate here>
 EOF
+```
 
+<!--
 cat > /usr/local/share/ca-certificates/registry.gitlab-server.crt <<EOF
 -----BEGIN CERTIFICATE-----
 MIIDtDCCApygAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7wwDQYJKoZIhvcNAQEL
@@ -333,7 +405,9 @@ oexqTnI9PMOmK7V0s8PYUlXTXW8UQX2X8/wMWChziwN1XlZzuhnFJZ/0e9K/LelA
 ZGCHDw8t3O8UJhfMKKVBdudgspEYGrzWt7UbrekR32QLTvPpx36aQQ==        
 -----END CERTIFICATE-----
 EOF
+-->
 
+```dos
 ls -l
 
 update-ca-certificates
@@ -363,6 +437,7 @@ Enter an executor: ssh, docker+machine, docker-ssh, docker, parallels, shell, vi
 shell
 ```
 
+<!--
 If error -
 
 ```bash
@@ -378,6 +453,7 @@ apt update && apt upgrade
 apt install net-tools
 apt install iputils-ping
 ```
+-->
 
 If success, you will see below message:
 
@@ -394,18 +470,26 @@ Once you finish above step, you should be able to see an available running in th
 
 ## 11. Copy necessary files into gitlab project repo
 
-**Git clone** from your gitlab project repo to your local and copy necessary files from our devopsdaydayup lab repo (in the same folder as this README.md)
+**git clone** from your gitlab project repo to your local and copy necessary files from the repo (in the same folder as this README.md)
 
-```dos
-git clone <URL from your gitlab server repo>
-cd <your project name folder>
-cp /path/to/003-GitlabCICD/{app.py,Dockerfile,requirements.txt,.gitlab-ci.yaml,.gitlab-ci.yml}  <your gitlab repo>
+```bash
+ls -la ~/udemy-devops-9projects-free/003-GitlabCICD/
+cd
+git clone http://gitlab.mydevopsrealprojects.com/gitlab-instance-452b726d/first_project.git
+
+Username for 'http://gitlab.mydevopsrealprojects.com': root
+Password for 'http://root@gitlab.mydevopsrealprojects.com': Password2023#
+
+cd ~/first_project
+cp ~/udemy-devops-9projects-free/003-GitlabCICD/{app.py,Dockerfile,requirements.txt,.gitlab-ci.yml} .
+ls -la
 git add .
 git commit -am "First commit"
 git push
 ```
 
 Once you push the code, you should be able to see the pipeline is automatically triggered under the project -> "CI/CD" -> "Jobs"
+
 ![gitlab-ci-pipeline](images/gitlab-ci-pipeline.png)
 
 ## 12. Verification
