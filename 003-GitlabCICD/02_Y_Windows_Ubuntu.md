@@ -34,7 +34,7 @@ In Vagrant Ubuntu's hosts file `/etc/hosts`
 127.0.0.1 registry.gitlab.mydevopsrealprojects.com
 ```
 
-## 3. Config the initial root password
+## 3. Config the root password
 
 ```yml
     hostname: 'gitlab.mydevopsrealprojects.com'
@@ -47,6 +47,7 @@ In Vagrant Ubuntu's hosts file `/etc/hosts`
 
 ## 4. Docker compose
 
+<!--
 Docker login with the GitHub token
 
 ```dos
@@ -54,20 +55,21 @@ docker login ghcr.io -u briansu2004
 ```
 
 Docker compose
+-->
 
 ```dos
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
 cd udemy-devops-9projects-free/003-GitlabCICD
-docker compose up -d
+docker compose up
 ```
 
-## 5. Login to your GitLab web
+## 5. Login to the GitLab
 
-Wait for about **5 mins** for the server to fully start up.
+Wait for about **5 ~ 10 minutes** for the server to fully start up.
 
-Then go to [http://gitlab.mydevopsrealprojects.com](http://gitlab.mydevopsrealprojects.com) and login the username `root` and the password.
+Then go to [http://gitlab.mydevopsrealprojects.com](http://gitlab.mydevopsrealprojects.com) and login the username `root` and the password `Password2023#`.
 
-## 6. get the GitLab registration token
+## 6. Get the GitLab registration token
 
 Click **"New project"** to create your first project
 
@@ -89,21 +91,13 @@ Click **"New project"** to create your first project
 
 ![1674087230175](image/01_YN_WindowsOnly/1674087230175.png)
 
-![1674087407552](image/01_YN_WindowsOnly/1674087407552.png)
-
-Register the runner with this URL:
-
-<http://gitlab.mydevopsrealprojects.com/>
-
-And this registration token:
-
-`GR1348941B7RskqMxf9685xNEJzpq`
-
 ![1674334798862](image/02_Y_Windows_Ubuntu/1674334798862.png)
 
-## 7. Update certificates
+We need to use the URL `http://gitlab.mydevopsrealprojects.com/` and the registration token to Register the runner.
 
-Since the initial Gitlab server **certificate** is missing some info and cannot be used by gitlab runner, we may have to **regenerate** a new one and **reconfigure** in the gitlab server. Run below commands:
+## 7. Update the certificates
+
+Since the initial Gitlab server **certificate** is missing some info and can't be used by the gitlab runner, we may have to **regenerate** a new one and **reconfigure** in the gitlab server.
 
 ```dos
 docker exec -it $(docker ps -f name=web -q) bash
@@ -128,6 +122,8 @@ cat gitlab.$YOUR_GITLAB_DOMAIN.crt
 cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
 exit
 ```
+
+e.g.
 
 ```bash
 root@gitlab:/etc/gitlab/ssl# cat gitlab.$YOUR_GITLAB_DOMAIN.crt
@@ -178,7 +174,7 @@ ZGCHDw8t3O8UJhfMKKVBdudgspEYGrzWt7UbrekR32QLTvPpx36aQQ==
 -----END CERTIFICATE-----
 ```
 
-## 8. Enable container register
+## 8. Enable the container register
 
 Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
 
@@ -218,7 +214,7 @@ gitlab-ctl restart
 exit
 ```
 
-## 9. Update certificates for docker client (Skip???)
+## 9. Update the certificates for the docker client
 
 In order to make **docker login** work, we need to add the **certificate** in the docker certs folder.
 
@@ -230,12 +226,6 @@ echo $YOUR_GITLAB_DOMAIN
 sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
 sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
 sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
-
-export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
-echo $YOUR_GITLAB_DOMAIN
-sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
-sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055/
-sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
 
 # Test docker login and you should be able to login now
 # Note: for Windows we can't use the default 5005 as it is blocked
@@ -252,6 +242,14 @@ Login Succeeded
 # You can also test if the docker image push works once login successfully
 ```
 
+<!--
+export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
+echo $YOUR_GITLAB_DOMAIN
+sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
+sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055/
+sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
+-->
+
 Test if the docker image push works once login successfully -
 
 Login to the gitlab server web UI and go to the project created, and then go to "Packages and registries" -> "Container Registry", should be able to see the valid registry URL you suppose to use in order to build and push your image.
@@ -260,7 +258,7 @@ e.g. `docker build -t registry.gitlab.mydevopsrealprojects.com:5005/gitlab-insta
 
 ![1674337330164](image/02_Y_Windows_Ubuntu/1674337330164.png)
 
-## 10. Configure **gitlab-runner**
+## 10. Configure the **gitlab-runner**
 
 Login to gitlab-runner and run commands below.
 
@@ -395,7 +393,7 @@ apt install iputils-ping
 ```
 -->
 
-If success, you will see below message:
+Success messages:
 
 ```dos
 Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
@@ -408,7 +406,7 @@ Once you finish above step, you should be able to see an available running in th
 
 ![1674338440742](image/02_Y_Windows_Ubuntu/1674338440742.png)
 
-## 11. Copy necessary files into gitlab project repo
+## 11. Prepare the GitLab project repo
 
 **git clone** from your gitlab project repo to your local and copy necessary files from the repo (in the same folder as this README.md)
 
@@ -434,15 +432,29 @@ Once you push the code, you should be able to see the pipeline is automatically 
 
 ![1674347770248](image/02_Y_Windows_Ubuntu/1674347770248.png)
 
-## 12. Verification
+## 12. Enjoy the GitLab pipeline
 
-a. Check your hello-world container by visiting [http://gitlab.mydevopsrealprojects.com:8080](http://gitlab.mydevopsrealprojects.com:8080)
+- Check the hello-world app
+
+[http://gitlab.mydevopsrealprojects.com:8080](http://gitlab.mydevopsrealprojects.com:8080)
 
 ![1674347566528](image/02_Y_Windows_Ubuntu/1674347566528.png)
 
-b. In your **gitlab repo**, update `return "Hello New Year!"` in `app.py` file. For example, update to `return "Hello DevOps!"`. Save the change and `git add .` and `git commit -am "Update code"` and then `git push`.
+- Update the code
 
-c. Once the CICD pipeline is completed, you can visit your hello-world web again to see if the content is changed.
+Try to update the `app.py` file, e.g. update from `return "Hello New Year!"` to `return "Hello DevOps!"`.
+
+Save the change and then
+
+```dos
+git add .
+git commit -am "Update code"
+git push
+```
+
+- Monitor the CICD pipeline 
+
+- Once the pipeline is completed, re-visit the hello-world app to verift if the content is changed.
 
 ![1674347907820](image/02_Y_Windows_Ubuntu/1674347907820.png)
 
