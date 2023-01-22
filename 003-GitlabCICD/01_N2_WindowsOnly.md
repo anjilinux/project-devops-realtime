@@ -424,29 +424,41 @@ Once you finish above step, you should be able to see an available running in th
 
 ## 11. Prepare the GitLab project repo
 
-**git clone** from your gitlab project repo to your local and copy necessary files from the repo (in the same folder as this README.md)
+![1674351041645](image/01_Y_WindowsOnly/1674351041645.png)
 
-```bash
-ls -la ~/udemy-devops-9projects-free/003-GitlabCICD/
-cd
+```dos
+cd c:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD
 git clone http://gitlab.mydevopsrealprojects.com/gitlab-instance-452b726d/first_project.git
-
-Username for 'http://gitlab.mydevopsrealprojects.com': root
-Password for 'http://root@gitlab.mydevopsrealprojects.com': Password2023#
-
-cd ~/first_project
-cp ~/udemy-devops-9projects-free/003-GitlabCICD/{app.py,Dockerfile,requirements.txt,.gitlab-ci.yml} .
-ls -la
+cd first_project
+copy ..\app.py . /y
+copy ..\Dockerfile . /y
+copy ..\requirements.txt . /y
+copy ..\.gitlab-ci.yml . /y
+dir
+git status
 git add .
 git commit -am "First commit"
 git push
 ```
 
-Once you push the code, you should be able to see the pipeline is automatically triggered under the project -> "CI/CD" -> "Jobs"
+After the git push, the pipeline will be automatically triggered under the project -> "CI/CD" -> "Jobs"
 
 ![1674347541464](image/02_Y_Windows_Ubuntu/1674347541464.png)
 
 ![1674347770248](image/02_Y_Windows_Ubuntu/1674347770248.png)
+
+Unfortunately it failed at here and no way to solve it!
+
+![1674351921287](image/01_N2_WindowsOnly/1674351921287.png)
+
+```dos
+$ docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/auth": dial unix /var/run/docker.sock: connect: permission denied
+ERROR: Job failed: exit status 1
+```
+
+<!--
 
 ## 12. Enjoy the GitLab pipeline
 
@@ -475,3 +487,5 @@ git push
 ![1674347907820](image/02_Y_Windows_Ubuntu/1674347907820.png)
 
 ![1674347883035](image/02_Y_Windows_Ubuntu/1674347883035.png)
+
+-->

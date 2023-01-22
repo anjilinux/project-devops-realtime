@@ -121,7 +121,7 @@ gitlab-runner verify --delete
 |---|---|---|---|---|
 | 1 | Windows only | N | N |   |
 | 2 | Windows + Ubuntu | Y | Y |   |
-| 3 | Mac only | N | N |   |
+| 3 | Mac only | ? | N |   |
 | 4 | Mac + Ubuntu | Y | Y |   |
 
 [Windows Only](01_N_WindowsOnly.md)
