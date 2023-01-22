@@ -27,9 +27,16 @@ a. Copy the CA certificate from one of Elasticsearch containers
 
 ```bash
 docker exec -it $(docker ps -aqf "name=001-elkmonitoring-es01-1") openssl x509 -fingerprint -sha256 -in /usr/share/elasticsearch/config/certs/ca/ca.crt
+
 ```
 
 The output will be used in the next step.
+
+e.g.
+
+```dos
+
+```
 
 b.  Go to the local host which you want to monitor and run below command:
 
@@ -39,6 +46,7 @@ cd /usr/local/share/ca-certificates/
 sudo vim elasticsearch-ca.crt
 # Paste the CA certificate you copied in above step and then run below command to add it to the host
 cat /usr/local/share/ca-certificates/elasticsearch-ca.crt
+
 sudo update-ca-certificates
 ```
 
