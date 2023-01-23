@@ -26,7 +26,9 @@ Project 002: Jenkins CICD Pipeline
 Project 003: Gitlab CICD Pipeline
 ```
 
-## Paid course
+[My Youtube channel](https://www.youtube.com/@devopswithbrian2283)
+
+## Paid course (WIP, coming soon)
 
 ```dos
 Project 001: ELK Monitoring
