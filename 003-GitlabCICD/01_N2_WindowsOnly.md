@@ -1,18 +1,18 @@
-# Project 003: GitLab CICD Pipeline
+# Project 003: Gitlab CICD Pipeline
 
-Windows + Ubuntu
+Windows only
 
 Works
 
 ## Steps
 
-## 1. Config the GitLab domain name
+## 1. Config the gitlab_domain_name
 
-In this lab, we will use `mydevopsrealprojects.com` as the GitLab domain name.
+In this lab, we will use `mydevopsrealprojects.com` as the gitlab_domain_name.
 
-Hence the gitlab URL is `http://gitlab.mydevopsrealprojects.com`
+Hence the gitlab instance URL is `http://gitlab.mydevopsrealprojects.com`
 
-We need it in the `docker-compose.yml` file.
+`docker-compose.yml`
 
 ## 2. Configure the **hosts** file
 
@@ -30,10 +30,6 @@ Unix / Mac: `/etc/hosts`
 In Vagrant Ubuntu's hosts file `/etc/hosts`
 
 ```bash
-sudo vi /etc/hosts
-```
-
-```bash
 127.0.0.1 gitlab.mydevopsrealprojects.com
 127.0.0.1 registry.gitlab.mydevopsrealprojects.com
 ```
@@ -45,7 +41,7 @@ sudo vi /etc/hosts
     environment:
       GITLAB_ROOT_PASSWORD: "Password2023#"
       EXTERNAL_URL: "http://gitlab.mydevopsrealprojects.com"
-      GITLAB_OMNIBUS_CONFIG: |ping gitlab.mydevopsrealprojects.com
+      GITLAB_OMNIBUS_CONFIG: |
         gitlab_rails['initial_root_password'] = "Password2023#"
 ```
 
@@ -61,24 +57,25 @@ docker login ghcr.io -u briansu2004
 Docker compose
 -->
 
-Start Vagrant
-
-```dos
-vagrant up
-vagrant ssh
-```
-
-In Vagrant,
-
 ```dos
 git clone https://github.com/briansu2004/udemy-devops-9projects-free.git
 cd udemy-devops-9projects-free/003-GitlabCICD
 docker compose up
 ```
 
+Note: these container IDs will be used in many of the following steps.
+
+```dos
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=web -q
+79de446cca8c
+
+C:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD>docker ps -f name=runner -q 
+2ac6d9e6b4c3
+```
+
 ## 5. Login to the GitLab
 
-Wait for about **5 ~ 10 minutes** for the server to fully start up.
+May have to wait for about **5 ~ 10 minutes** for the server to fully start up.
 
 Then go to [http://gitlab.mydevopsrealprojects.com](http://gitlab.mydevopsrealprojects.com) and login the username `root` and the password `Password2023#`.
 
@@ -106,29 +103,24 @@ Click **"New project"** to create your first project
 
 ![1674334798862](image/02_Y_Windows_Ubuntu/1674334798862.png)
 
-We need to use the URL `http://gitlab.mydevopsrealprojects.com/` (not `https`) and the registration token to Register the runner.
+We need to use the URL `http://gitlab.mydevopsrealprojects.com/` and the registration token to Register the runner.
+
+<!-- GR1348941hvdmWo7zdxfYESSpf6MY -->
 
 ## 7. Update the certificates
 
 Since the initial Gitlab server **certificate** is missing some info and can't be used by the gitlab runner, we may have to **regenerate** a new one and **reconfigure** in the gitlab server.
 
 ```dos
-docker exec -it $(docker ps -f name=web -q) bash
-
+docker exec -it 79de446cca8c bash
 mkdir /etc/gitlab/ssl
 cd /etc/gitlab/ssl
-
 openssl genrsa -out ca.key 2048
-
 openssl req -new -x509 -days 365 -key ca.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=Acme Root CA" -out ca.crt
-
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 echo $YOUR_GITLAB_DOMAIN
-
 openssl req -newkey rsa:2048 -nodes -keyout gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out gitlab.$YOUR_GITLAB_DOMAIN.csr
-
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out gitlab.$YOUR_GITLAB_DOMAIN.crt
-
 ls -l
 ```
 
@@ -136,14 +128,62 @@ Certificate for nginx (container registry)
 
 ```dos
 openssl req -newkey rsa:2048 -nodes -keyout registry.gitlab.$YOUR_GITLAB_DOMAIN.key -subj "/C=CN/ST=GD/L=SZ/O=Acme, Inc./CN=*.$YOUR_GITLAB_DOMAIN" -out registry.gitlab.$YOUR_GITLAB_DOMAIN.csr
-
 openssl x509 -req -extfile <(printf "subjectAltName=DNS:$YOUR_GITLAB_DOMAIN,DNS:gitlab.$YOUR_GITLAB_DOMAIN,DNS:registry.gitlab.$YOUR_GITLAB_DOMAIN") -days 365 -in registry.gitlab.$YOUR_GITLAB_DOMAIN.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
-
 ls -l
 cat gitlab.$YOUR_GITLAB_DOMAIN.crt
 cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
-
 exit
+```
+
+e.g.
+
+```bash
+root@gitlab:/etc/gitlab/ssl# cat gitlab.$YOUR_GITLAB_DOMAIN.crt
+-----BEGIN CERTIFICATE-----
+MIIDijCCAnKgAwIBAgIUQE8oT0hQxDYuC4PsIXb3CBKN9UEwDQYJKoZIhvcNAQEL
+BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
+A1UECgwKQWNtZSwgSW5jLjEVMBMGA1UEAwwMQWNtZSBSb290IENBMB4XDTIzMDEy
+MjAxMTEwMFoXDTI0MDEyMjAxMTEwMFowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
+AkdEMQswCQYDVQQHDAJTWjETMBEGA1UECgwKQWNtZSwgSW5jLjEjMCEGA1UEAwwa
+Ki5teWRldm9wc3JlYWxwcm9qZWN0cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
+DwAwggEKAoIBAQDcqT1Jo1igGYbifLdI2/oijrSoogsPT6B3NJ65Wqegs62W3139
+dSoOX0xbnoiO6RaxAoqqiEAh8g+VDgODpUlRoxUQ736SfDtlE7UNZ1Osx6Jlxf/+
+L5Pk1r3u+hOkDGvnXjB+rmF5JAA3Em/xQwnrwyM6q2vtm5OMxckaRbQ2f8MirZNd
+QycPCwL3b7N5sh7OqS+dWDuQnes6AqhMJS6T3EMNykblWUlNQtJlSPHGsq6GRD3v
+iyapJ4qjcTl7cEKeg1m/6vUWjjWczNL/Grm+/vSmZinT6+sHgMs6GCUS7cF7tIIx
+aNvr+zQyhfwlaX7+lEkhVSsPMjYCe/1EwRCrAgMBAAGjSDBGMEQGA1UdEQQ9MDuC
+GG15ZGV2b3BzcmVhbHByb2plY3RzLmNvbYIfZ2l0bGFiLm15ZGV2b3BzcmVhbHBy
+b2plY3RzLmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAEuQPA0KNcSZLO93mUah4PFdS
+PpsVAUkyLiMSg+oiineXulPUqWs0rTb47rx53Js75syQLzih4qGt1w/VQOn65NSm
+AQFjWGSLVZRqEFI+vzTVsz3+IPTTJFEK1gkwmtyeiXE52usPHa/Z73CVd814pBl3
+qRX1T/QH1ul0XiL+1sswFnp1KEm6177mXTfyzY4VK2+8XKYH+5es4xHOmLGkw7a1
+5nEcUJaxviBG2pxqeTOx1SQNcy44NGQoReRxxEDOpXOkoNiGWtVE/fZEK58SoumD
+ODl+o4Q+XS6mdZXinOpVXUj8I+g2QZfTo7MIqK/bAG4oF9ZZWZwiEVqEMPkisw==
+-----END CERTIFICATE-----
+
+root@gitlab:/etc/gitlab/ssl# cat registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
+-----BEGIN CERTIFICATE-----
+MIIDtDCCApygAwIBAgIUQE8oT0hQxDYuC4PsIXb3CBKN9UIwDQYJKoZIhvcNAQEL
+BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
+A1UECgwKQWNtZSwgSW5jLjEVMBMGA1UEAwwMQWNtZSBSb290IENBMB4XDTIzMDEy
+MjAxMTExMloXDTI0MDEyMjAxMTExMlowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
+AkdEMQswCQYDVQQHDAJTWjETMBEGA1UECgwKQWNtZSwgSW5jLjEjMCEGA1UEAwwa
+Ki5teWRldm9wc3JlYWxwcm9qZWN0cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
+DwAwggEKAoIBAQDGmrKo5Tvdok9lYoFKfbLGGwsfpzoKoXiMWjuFRnV/INDLR/cF
+oKJ7K+p7Plr5erGrYvbLvOnhTBP1aepXgbh3pZv+n0npr2j2T8jKs1vqekR5SOvT
+fJDDlCYNYVph+kyQiIebC9vZppG6diudFLP3xJVfie1IMeqDAMlVN235CFBw5ImC
+gLOn3xNqGsMW/DGfYpNn45n9pQ1tnOoOQk10RcLP1gweqg8P4qKIB0sWAZyeJ69x
+OMBgm24fQcrWKWljGEl+qmqdfulgJpsu5gXgboLo9+tuK47OlWOpGpIhleiI0TrL
+cjVI77pLINKgQhJZePGZYeFFfTtG6KQYwBPXAgMBAAGjcjBwMG4GA1UdEQRnMGWC
+GG15ZGV2b3BzcmVhbHByb2plY3RzLmNvbYIfZ2l0bGFiLm15ZGV2b3BzcmVhbHBy
+b2plY3RzLmNvbYIocmVnaXN0cnkuZ2l0bGFiLm15ZGV2b3BzcmVhbHByb2plY3Rz
+LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAdcOswDQKCN01fXli4pRpaz/Enlig0Tey
+72DitjDjieTOmTft40vEbk+7GyejkSTwDwmeQvF9K1tHPL1YO+DiCxlw7Lm1UL5U
+SjG9+c0fJP7YNJFVYpshYM+N15J5XvcWFnE50S2VXLHnXZmUGra4IGx4mIQRsd8j
+v2DaJUNQusLvOXoJJc5woo3gm1Yk5lG53gRmQWBQFbRRMfZXnEcG9oTNT5p2yhHP
+2iAKR+ngyV+O9v+/u56uyganJLzovvErQ2YzwqpBrzykemkTwF7VHTPc9jyCnnbK
+dsGl2GpZ5ZUzRDRGkLkxKLX0tXne9+N1/+ZizRCg1dc3CVrEoCvqFg==
+-----END CERTIFICATE-----
 ```
 
 ## 8. Enable the container register
@@ -151,9 +191,7 @@ exit
 Add below lines in the bottom of the file `/etc/gitlab/gitlab.rb`.
 
 ```dos
-docker exec -it $(docker ps -f name=web -q) bash
-
-tail -25 /etc/gitlab/gitlab.rb
+docker exec -it 79de446cca8c bash
 
 cat >> /etc/gitlab/gitlab.rb <<EOF
 
@@ -178,7 +216,6 @@ cat >> /etc/gitlab/gitlab.rb <<EOF
  registry_nginx['enable'] = true
  registry_nginx['listen_port'] = 5005
 EOF
-
 tail -25 /etc/gitlab/gitlab.rb
 ```
 
@@ -186,48 +223,28 @@ Reconfigure the gitlab to apply above change
 
 ```dos
 gitlab-ctl reconfigure
-
 gitlab-ctl restart
-
 exit
 ```
 
-## 9. Update the certificates for the docker client
+Note: May have to wait for about **5 ~ 10 minutes** for the server to fully start up.
 
-In order to make **docker login** work, we need to add the **certificate** in the docker certs folder.
+## 9. Docker login
 
-<!--
-sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
-sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/
-sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005
-cat /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5005/registry.gitlab.mydevopsrealprojects.com.crt
--->
+<!-- Update the certificates for the docker client (skip)-->
 
 ```dos
-# Login the host you are going to run the docker commands
-# In the Vagrant Ubuntu
-export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
-echo $YOUR_GITLAB_DOMAIN
-
-sudo mkdir -p /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
-sudo docker cp $(docker ps -f name=web -q):/etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055/
-sudo ls /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055
-cat /etc/docker/certs.d/registry.gitlab.$YOUR_GITLAB_DOMAIN:5055/registry.gitlab.mydevopsrealprojects.com.crt
+set YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
+echo %YOUR_GITLAB_DOMAIN%
 
 # Test docker login and you should be able to login now
-# Note: for Windows we can't use the default 5005 as it is blocked
-docker login registry.gitlab.$YOUR_GITLAB_DOMAIN:5055 
+docker login registry.gitlab.%YOUR_GITLAB_DOMAIN%:5055
 Username: root
 Password: Password2023#
-
-WARNING! Your password will be stored unencrypted in /home/devops/.docker/config.json.
-Configure a credential helper to remove this warning. See
-https://docs.docker.com/engine/reference/commandline/login/#credentials-store
-
 Login Succeeded
-
-# You can also test if the docker image push works once login successfully
 ```
+
+![1674350581167](image/01_Y_WindowsOnly/1674350581167.png)
 
 <!--
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
@@ -241,9 +258,15 @@ Test if the docker image push works once login successfully -
 
 Login to the gitlab server web UI and go to the project created, and then go to "Packages and registries" -> "Container Registry", should be able to see the valid registry URL you suppose to use in order to build and push your image.
 
-e.g. `docker build -t registry.gitlab.mydevopsrealprojects.com:5005/gitlab-instance-d350f73c/first-projct .`
-
 ![1674337330164](image/02_Y_Windows_Ubuntu/1674337330164.png)
+
+e.g.
+
+```dos
+docker build -t registry.gitlab.mydevopsrealprojects.com:5055/gitlab-instance-7ca17aa7/first_project .
+```
+
+![1674350544322](image/01_Y_WindowsOnly/1674350544322.png)
 
 ## 10. Configure the **gitlab-runner**
 
@@ -259,12 +282,16 @@ Please note the tag below has to match with the `tags` section in `.gitlab-ci.ym
 ```dos
 export YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
 echo $YOUR_GITLAB_DOMAIN
-docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/gitlab.$YOUR_GITLAB_DOMAIN.crt
-docker exec $(docker ps -f name=web -q) cat /etc/gitlab/ssl/registry.gitlab.$YOUR_GITLAB_DOMAIN.crt
+docker exec 79de446cca8c cat /etc/gitlab/ssl/gitlab.%YOUR_GITLAB_DOMAIN%.crt
+docker exec 79de446cca8c cat /etc/gitlab/ssl/registry.gitlab.%YOUR_GITLAB_DOMAIN%.crt
+
+set YOUR_GITLAB_DOMAIN=mydevopsrealprojects.com
+echo %YOUR_GITLAB_DOMAIN%
+
 ```
 
 ```dos
-docker exec -it $(docker ps -f name=gitlab-runner -q) bash
+docker exec -it 2ac6d9e6b4c3 bash
 cd /usr/local/share/ca-certificates/
 ls -l
 
@@ -276,25 +303,25 @@ EOF
 <!--
 cat > /usr/local/share/ca-certificates/gitlab-server.crt <<EOF
 -----BEGIN CERTIFICATE-----
-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
+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
-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
+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
-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
+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
-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
+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
 -----END CERTIFICATE-----
 EOF
 -->
@@ -308,26 +335,26 @@ EOF
 <!--
 cat > /usr/local/share/ca-certificates/registry.gitlab-server.crt <<EOF
 -----BEGIN CERTIFICATE-----
-MIIDtDCCApygAwIBAgIUQRt4YrO0Pvw8oXPhHFQ7JlleJ7wwDQYJKoZIhvcNAQEL
+MIIDtDCCApygAwIBAgIUQE8oT0hQxDYuC4PsIXb3CBKN9UIwDQYJKoZIhvcNAQEL
 BQAwUzELMAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjETMBEG
 A1UECgwKQWNtZSwgSW5jLjEVMBMGA1UEAwwMQWNtZSBSb290IENBMB4XDTIzMDEy
-MTIxMTA0MloXDTI0MDEyMTIxMTA0MlowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
+MjAxMTExMloXDTI0MDEyMjAxMTExMlowYTELMAkGA1UEBhMCQ04xCzAJBgNVBAgM
 AkdEMQswCQYDVQQHDAJTWjETMBEGA1UECgwKQWNtZSwgSW5jLjEjMCEGA1UEAwwa
 Ki5teWRldm9wc3JlYWxwcm9qZWN0cy5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IB
-DwAwggEKAoIBAQCni7H94DdILJ1Sh7Bhb03JhSAu6em0uVBcQkK2iS0AX43e/xJ7
-McNws5qbiCEjmQODalBXYkFquWRj6kwiEuHYUYqPZlce+wfLlg/f7Zrf/EE73gS2
-1D3uhUEMISa34NTnUHXo87NlZ5Ybp6a/GgTwdTuVzwuD9svuGNePInKULYzeAQ6k
-quOyP3gRu1Gg3qWLeQ64YuBz+ftktXmvIB9e+iKkl4Vv/2gAI9gXfxVZ50GzLmnB
-r3WYRiOimg3WseVo5eNvIRsdKQLcMj9F8AvKCC37GpnzKIvTjq/nFfLnEri0T1AD
-06nHEMT3TbnCLOmILZM8hkE27kuBR9x5BY2rAgMBAAGjcjBwMG4GA1UdEQRnMGWC
+DwAwggEKAoIBAQDGmrKo5Tvdok9lYoFKfbLGGwsfpzoKoXiMWjuFRnV/INDLR/cF
+oKJ7K+p7Plr5erGrYvbLvOnhTBP1aepXgbh3pZv+n0npr2j2T8jKs1vqekR5SOvT
+fJDDlCYNYVph+kyQiIebC9vZppG6diudFLP3xJVfie1IMeqDAMlVN235CFBw5ImC
+gLOn3xNqGsMW/DGfYpNn45n9pQ1tnOoOQk10RcLP1gweqg8P4qKIB0sWAZyeJ69x
+OMBgm24fQcrWKWljGEl+qmqdfulgJpsu5gXgboLo9+tuK47OlWOpGpIhleiI0TrL
+cjVI77pLINKgQhJZePGZYeFFfTtG6KQYwBPXAgMBAAGjcjBwMG4GA1UdEQRnMGWC
 GG15ZGV2b3BzcmVhbHByb2plY3RzLmNvbYIfZ2l0bGFiLm15ZGV2b3BzcmVhbHBy
 b2plY3RzLmNvbYIocmVnaXN0cnkuZ2l0bGFiLm15ZGV2b3BzcmVhbHByb2plY3Rz
-LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAPJGP5/eAzF3wrjz8PHFDgbw9xX9iq2SF
-T3r9te3gohmulGTC6HI1hBaZomGo0GffM4sl1PX+pzpMlI6m5E5iaA6/+PeuFsr/
-s0/x9AemPkqGlm2cQMwrdDPss1LHuhIz+rlfuuzKWQpl3bnVK/oISpINOb1VYxYF
-7eJxh86CueUqnqLTSFltUdARteW8XRu/1F2aPvqKsVdArGmOre3SLIKVcBxx3Nmw
-oexqTnI9PMOmK7V0s8PYUlXTXW8UQX2X8/wMWChziwN1XlZzuhnFJZ/0e9K/LelA
-ZGCHDw8t3O8UJhfMKKVBdudgspEYGrzWt7UbrekR32QLTvPpx36aQQ==        
+LmNvbTANBgkqhkiG9w0BAQsFAAOCAQEAdcOswDQKCN01fXli4pRpaz/Enlig0Tey
+72DitjDjieTOmTft40vEbk+7GyejkSTwDwmeQvF9K1tHPL1YO+DiCxlw7Lm1UL5U
+SjG9+c0fJP7YNJFVYpshYM+N15J5XvcWFnE50S2VXLHnXZmUGra4IGx4mIQRsd8j
+v2DaJUNQusLvOXoJJc5woo3gm1Yk5lG53gRmQWBQFbRRMfZXnEcG9oTNT5p2yhHP
+2iAKR+ngyV+O9v+/u56uyganJLzovvErQ2YzwqpBrzykemkTwF7VHTPc9jyCnnbK
+dsGl2GpZ5ZUzRDRGkLkxKLX0tXne9+N1/+ZizRCg1dc3CVrEoCvqFg==        
 -----END CERTIFICATE-----
 EOF
 -->
@@ -336,17 +363,16 @@ EOF
 ls -l
 
 update-ca-certificates
-
 gitlab-runner register 
 ```
 
 ```dos
 Enter the GitLab instance URL (for example, https://gitlab.com/):
-http://gitlab.mydevopsrealprojects.com
+http://gitlab.mydevopsrealprojects.com    # Note: don't use https://gitlab.mydevopsrealprojects.com
 
 Enter the registration token:
 <Paste the token retrieved in Step 6>
-GR1348941XikWdWB9K5DBxBG_VH9_
+GR1348941hvdmWo7zdxfYESSpf6MY
 
 Enter a description for the runner:
 [bad518d25b44]: test
@@ -376,10 +402,9 @@ install net-tools and iputils-ping
 
 ```bash
 apt update && apt upgrade
-apt install net-tools iputils-ping
+apt install net-tools
+apt install iputils-ping
 ```
-
-If still won't work, destroy vagrant image and start over.
 -->
 
 Success messages:
@@ -391,35 +416,49 @@ Configuration (with the authentication token) was saved in "/etc/gitlab-runner/c
 root@bad518d25b44:/usr/local/share/ca-certificates# cat /etc/gitlab-runner/config.toml 
 ```
 
+![1674350815371](image/01_Y_WindowsOnly/1674350815371.png)
+
 Once you finish above step, you should be able to see an available running in the project's CICD Runners section.
 
 ![1674338440742](image/02_Y_Windows_Ubuntu/1674338440742.png)
 
 ## 11. Prepare the GitLab project repo
 
-**git clone** from your gitlab project repo to your local and copy necessary files from the repo (in the same folder as this README.md)
+![1674351041645](image/01_Y_WindowsOnly/1674351041645.png)
 
-```bash
-ls -la ~/udemy-devops-9projects-free/003-GitlabCICD/
-cd
+```dos
+cd c:\CodeUdemy\udemy-devops-9projects-free\003-GitlabCICD
 git clone http://gitlab.mydevopsrealprojects.com/gitlab-instance-452b726d/first_project.git
-
-Username for 'http://gitlab.mydevopsrealprojects.com': root
-Password for 'http://root@gitlab.mydevopsrealprojects.com': Password2023#
-
-cd ~/first_project
-cp ~/udemy-devops-9projects-free/003-GitlabCICD/{app.py,Dockerfile,requirements.txt,.gitlab-ci.yml} .
-ls -la
+cd first_project
+copy ..\app.py . /y
+copy ..\Dockerfile . /y
+copy ..\requirements.txt . /y
+copy ..\.gitlab-ci.yml . /y
+dir
+git status
 git add .
-git commit -m "First commit"
+git commit -am "First commit"
 git push
 ```
 
-Once you push the code, you should be able to see the pipeline is automatically triggered under the project -> "CI/CD" -> "Jobs"
+After the git push, the pipeline will be automatically triggered under the project -> "CI/CD" -> "Jobs"
 
 ![1674347541464](image/02_Y_Windows_Ubuntu/1674347541464.png)
 
 ![1674347770248](image/02_Y_Windows_Ubuntu/1674347770248.png)
+
+Unfortunately it failed at here and no way to solve it!
+
+![1674351921287](image/01_N2_WindowsOnly/1674351921287.png)
+
+```dos
+$ docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/auth": dial unix /var/run/docker.sock: connect: permission denied
+ERROR: Job failed: exit status 1
+```
+
+<!--
 
 ## 12. Enjoy the GitLab pipeline
 
@@ -448,3 +487,5 @@ git push
 ![1674347907820](image/02_Y_Windows_Ubuntu/1674347907820.png)
 
 ![1674347883035](image/02_Y_Windows_Ubuntu/1674347883035.png)
+
+-->

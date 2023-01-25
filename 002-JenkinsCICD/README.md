@@ -28,8 +28,10 @@ Understand how to setup/configure Jenkins as CICD pipeline. Familiarize with Jen
 
 [Windows Only](01_Y_WindowsOnly.md)
 
+<!--
 [With_Windows_Ubuntu](02_Y_Windows_Ubuntu.md)
 
 [Mac Only](03_Y_MacOnly.md)
 
 [With_Mac_Ubuntu](04_Y_Mac_Ubuntu.md)
+-->
