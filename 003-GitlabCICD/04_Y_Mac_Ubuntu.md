@@ -43,7 +43,7 @@ Windows: `C:\Windows\System32\drivers\etc\hosts`
 
 ## 4. Docker compose
 
-Docker login with the GitHub token
+If the ghcr.io package is private, need to Docker login with the GitHub token first:
 
 ```dos
 docker login ghcr.io -u briansu2004
