@@ -2,21 +2,9 @@
 
 Enjoy 😀
 
-<!--
+My first Udemy course (and it is free)!
 
-## The solutions for known issues
-
-[The solutions for known issues](Issues.md)
-
-## Vagrant for Ubuntu
-
-[Vagrant](Vagrant.md)
-
-## Install Docker in Ubuntu
-
-[Install Docker in Ubuntu](InstallDockerInUbuntu.md)
-
--->
+[DevOps Labs: 9 Real DevOps Projects (free version)](https://lnkd.in/gssutqcV)
 
 ## Free course
 
