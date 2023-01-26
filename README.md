@@ -1,10 +1,10 @@
 # DevOps Labs: 9 Real DevOps Projects (free version)
 
-Enjoy 😀
-
 My first Udemy course (and it is free)!
 
 [DevOps Labs: 9 Real DevOps Projects (free version)](https://lnkd.in/gssutqcV)
+
+Enjoy 😀
 
 ## Free course
 
