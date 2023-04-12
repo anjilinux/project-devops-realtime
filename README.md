@@ -1,37 +1,34 @@
-# DevOps Labs: Lots of Real DevOps Projects
-
-## Courses
-
-- [DevOps Labs: 14 Real DevOps Projects](Coming soon)
-
-- [DevOps Labs: 9 Real DevOps Projects](https://www.udemy.com/course/devops-labs-9-real-devops-projects/)
-
-- [DevOps Labs: 6 Real DevOps Projects](https://www.udemy.com/course/devops-labs-6-real-devops-projects/)
-
-- [DevOps Labs: 3 Real DevOps Projects](https://www.udemy.com/course/devops-labs-9-real-devops-projects-free-version/)
+# DevOps Labs: 3 Real DevOps Projects
 
 Enjoy 😀
 
+## Course
+
+[DevOps Labs: 3 Real DevOps Projects](https://www.udemy.com/course/devops-labs-9-real-devops-projects-free-version/)
+
+<a href="https://www.udemy.com/course/devops-labs-9-real-devops-projects-free-version/">![DevOps Labs: 3 Real DevOps Projects](image/course_image_6.jpg)</a>
+
 ## Labs
 
-- Project 001: ELK Monitoring
-- Project 002: Jenkins CICD Pipeline
-- Project 003: Gitlab CICD Pipeline
-- Project 004: Deploy Docker with Terraform Script
-- Project 005: Vault Jenkins Pipeline
-- Project 006: Push War file to Nexus Repository Via Jenkins Pipeline and Deploy to Tomcat in Vagrant VM
-- Project 007: Managing SSH Access with Vault
-- Project 008: Install Jenkins Using Ansible
-- Project 009: Helm Deployment in K8s
-- Project 010: Deploy Prometheus/Grafana on Minikube and Monitor The Health of Containers and VMs
-- Project 011: Create Read Only Kubeconfig File
-- Project 012: CronjobVaultBackupHelmMinikube
-- Project 013: JavaMonitoryConfigmapMinikube
-- Project 014: Deploy and Use Vault As Agent Sidecar Injector
+- Lab 001: ELK Monitoring
+- Lab 002: Jenkins CICD Pipeline
+- Lab 003: Gitlab CICD Pipeline
 
-...
+## More labs (WIP)
 
-(More new labs are coming soon)
+```dos
+Lab 004: Deploy Docker with Terraform Script
+Lab 005: Vault Jenkins Pipeline
+Lab 006: Push War file to Nexus Repository Via Jenkins Pipeline and Deploy to Tomcat in Vagrant VM
+Lab 007: Managing SSH Access with Vault
+Lab 008: Install Jenkins Using Ansible
+Lab 009: Helm Deployment in Kubernetes
+Lab 010: Deploy Prometheus/Grafana on Minikube and Monitor The Health of Containers and VMs
+Lab 011: Create Read Only Kubeconfig File
+Lab 012: Backup Vault in Minio
+Lab 013: Develop a Java Application in K8s for Monitoring ConfigMap Modifications and Content Changes
+Lab 014: Deploy and Use Vault As Agent Sidecar Injector
+```
 
 ## Youtube channel
 
